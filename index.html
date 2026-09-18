@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffd6e7">
+  <title>Happy Birthday Pandi 🐷🩷</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="floating-decor" aria-hidden="true">
+    <span>✨</span><span>🐷</span><span>🎀</span><span>✨</span><span>🐷</span>
+  </div>
+
+  <main id="app">
+    <!-- 1. Birthday check -->
+    <section class="screen active" id="birthdayScreen">
+      <div class="start-pig">
+        <img src="assets/gifs/sittingpig.gif" alt="Cute sitting pig">
+      </div>
+      <h1>Hi!! Pandi 🐽</h1>
+      <p class="subtitle">Say your birthday to start 🎂</p>
+      <div class="card">
+        <label>Your birthday</label>
+
+<div class="date-inputs">
+  <input id="day" type="text" inputmode="numeric" maxlength="2" placeholder="DD">
+  <span>/</span>
+  <input id="month" type="text" inputmode="numeric" maxlength="2" placeholder="MM">
+  <span>/</span>
+  <input id="year" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY">
+</div>
+
+<button class="primary" id="birthdayBtn">Start 🐷</button>
+        <p class="hint">Only Pandi knows the secret date 👀</p>
+      </div>
+
+    </section>
+
+    <!-- 2. Are you ready -->
+    <section class="screen" id="readyScreen">
+      <div class="corner-sticker placeholder-sticker">YOUR<br>STICKER</div>
+      <div class="pig-mini floaty">🐷</div>
+      <h2>Are You Ready? 👀</h2>
+      <p class="subtitle">Something tiny and silly is waiting... 🐽</p>
+      <div class="choice-row">
+        <button class="primary" id="yesBtn">YES 😎</button>
+        <button class="secondary" id="noBtn">NO 😑</button>
+      </div>
+
+      <div class="scene-decor">
+        <span class="bubble b1">🐷</span><span class="bubble b2">💤</span>
+        <span class="bubble b3">🎈</span><span class="bubble b4">✨</span>
+      </div>
+    </section>
+
+    <!-- 3. Birthday celebration -->
+    <section class="screen" id="celebrateScreen">
+      <h2 class="birthday-title">Happy Birthday ra Pandi 🐷😍</h2>
+      <p class="subtitle">Okayyy... now we celebrate! 🎉</p>
+
+      <div class="party-stage">
+        <div class="balloons">🎈 🎈 🎈</div>
+        <div class="cake-pig">
+          <div class="party-hat">🎉</div>
+          <div class="pig-face cake-face"><span class="eye left"></span><span class="eye right"></span>
+            <span class="snout"><i></i><i></i></span>
+          </div>
+          <div class="cake">
+            <div class="candle c1"><span class="flame">🔥</span></div>
+            <div class="candle c2"><span class="flame">🔥</span></div>
+            <div class="candle c3"><span class="flame">🔥</span></div>
+            <div class="cake-top">🎂</div>
+          </div>
+        </div>
+        <div class="party-pigs">
+          <img src="assets/gifs/dancingpig.gif" alt="Dancing pig">
+          <img src="assets/gifs/cakepig.gif" alt="Birthday pig">
+          <img src="assets/gifs/Crawlingdancepig.gif" alt="Dancing pig">
+        </div>
+      </div>
+
+      <button class="primary" id="celebrateBtn">Let's Celebrate 🎉</button>
+
+      <div id="afterCelebrate" class="hidden success-box">
+        <div class="confetti">🎉 ✨ 🥳 ✨ 🎈</div>
+        <h3>Party startedddd! 🐷🎉</h3>
+        <p>Okayyy, now there is one more surprise... 👀</p>
+        <button class="primary" id="giftBtn">Continue to Gift 🎁</button>
+      </div>
+    </section>
+
+    <!-- 4. Puzzle -->
+    <section class="screen" id="puzzleScreen">
+
+  <h2>Are you ready for the gift? 🎁</h2>
+
+  <p class="subtitle">
+    First... put me back together 🐷🧩
+  </p>
+
+  <div class="puzzle-card">
+
+    <p class="puzzle-instruction">
+      Drag each piece into the matching place 👀
+    </p>
+
+    <div id="puzzleBoard" class="puzzle-board"></div>
+
+    <p id="puzzleMessage" class="puzzle-message">
+      Start with any piece 🐷
+    </p>
+
+    <div id="puzzlePieces" class="puzzle-pieces"></div>
+
+  </div>
+
+  <div id="puzzleSolved" class="success-box hidden">
+    <div class="confetti">🎉 ✨ 🥳 ✨ 🎉</div>
+    <h3>Puzzle Solved! 🐷🩷</h3>
+    <p>You actually did it 😂</p>
+    <button class="primary surprise-cta" id="surpriseBtn">TAP FOR SURPRISE 🐷❤️</button>
+  </div>
+
+</section>
+
+    <!-- 5. Big surprise animation -->
+    <section class="screen" id="surpriseScreen">
+      <div class="surprise-wrap">
+        <div class="surprise-label">WAIT... WHAT IS THIS? 👀</div>
+
+        <!-- The supplied animation is now the ONLY surprise animation.
+             It is a real MP4, cropped to 9:16 for phones and kept responsive. -->
+        <div class="surprise-video-frame" aria-label="Pig nose transforming into a heart">
+          <video id="surpriseVideo"
+                 class="surprise-video"
+                 muted
+                 playsinline
+                 webkit-playsinline
+                 preload="auto">
+            <source src="assets/video/surprise-animation-portrait.mp4" type="video/mp4">
+            Your browser does not support video playback.
+          </video>
+        </div>
+
+        <h2 id="surpriseText">Waittt... 🐽</h2>
+
+        <div class="surprise-actions">
+          <button class="replay-surprise hidden" id="replaySurpriseBtn"
+                  type="button" aria-label="Replay surprise animation">
+            <span class="replay-icon">↻</span>
+            <span>WATCH AGAIN</span>
+          </button>
+
+          <button class="primary hidden" id="openVideoBtn">OPEN YOUR GIFT 🎁</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Video gift -->
+    <section class="screen" id="videoScreen">
+      <div class="gift-open">🎁✨</div>
+      <h2>Okay... this is your gift 🐷</h2>
+      <div class="video-wrap">
+        <video id="birthdayVideo" controls playsinline preload="metadata">
+          <source src="assets/video/birthday-video.mp4" type="video/mp4">
+          Your browser does not support video playback.
+        </video>
+      </div>
+      <div class="message-card">
+        <p>May all your wishes come true and have a bright future ahead ra 🐽</p>
+        <div class="goodbye">Bye.... 👋</div>
+        <div class="placeholder-sticker">YOUR GOODBYE STICKER</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Reusable reaction popup: different GIF + message for each action -->
+  <div id="reactionOverlay" class="reaction-overlay hidden" aria-hidden="true">
+    <div class="reaction-modal">
+      <button class="reaction-close" id="reactionClose" aria-label="Close">×</button>
+      <img id="reactionGif" class="reaction-gif" src="" alt="Pig reaction">
+      <div id="reactionEmoji" class="reaction-emoji">🐷</div>
+      <h3 id="reactionTitle">Oops! 🐷</h3>
+      <p id="reactionMessage">Something happened...</p>
+      <button class="primary" id="reactionAction">Okay</button>
+    </div>
+  </div>
+
+  <div id="celebrationFx" class="celebration-fx" aria-hidden="true"></div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
