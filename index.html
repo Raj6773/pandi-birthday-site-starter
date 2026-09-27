@@ -17,7 +17,7 @@
         <img src="assets/gifs/DateofBirth/what.gif" alt="">
         <img src="assets/gifs/DateofBirth/excited.gif" alt="">
         <img src="assets/gifs/DateofBirth/happy-girl.gif" alt="">
-        <img src="assets/gifs/DateofBirth/suprize-girl.gif" alt="">
+        <img src="assets/gifs/DateofBirth/surprize-girl.gif" alt="">
         <img src="assets/gifs/DateofBirth/heart_img.gif" alt="">
         <img src="assets/gifs/DateofBirth/hii.gif" alt="">
       </div>
@@ -46,19 +46,32 @@
 
     <!-- 2. Are you ready -->
     <section class="screen" id="readyScreen">
-      <div class="corner-sticker placeholder-sticker">YOUR<br>STICKER</div>
-      <div class="pig-mini floaty">🐷</div>
-      <h2>Are You Ready? 👀</h2>
-      <p class="subtitle">Something tiny and silly is waiting... 🐽</p>
-      <div class="choice-row">
-        <button class="primary" id="yesBtn">YES 😎</button>
-        <button class="secondary" id="noBtn">NO 😑</button>
+
+      <!-- Large dancing GIF stays behind the main content -->
+      <div class="ready-gif-center" aria-hidden="true">
+        <img src="assets/gifs/AreYouReady/Girl_dancing_2.gif" alt="" draggable="false">
       </div>
 
-      <div class="scene-decor">
-        <span class="bubble b1">🐷</span><span class="bubble b2">💤</span>
-        <span class="bubble b3">🎈</span><span class="bubble b4">✨</span>
+      <!-- Small floating corner GIFs -->
+      <div class="ready-corner-gifs" aria-hidden="true">
+        <img class="ready-gif rg1" src="assets/gifs/AreYouReady/amazing.gif" alt="" draggable="false">
+        <img class="ready-gif rg2" src="assets/gifs/AreYouReady/cool_girl.gif" alt="" draggable="false">
+        <img class="ready-gif rg3" src="assets/gifs/AreYouReady/excited.gif" alt="" draggable="false">
+        <img class="ready-gif rg4" src="assets/gifs/AreYouReady/happy-girl.gif" alt="" draggable="false">
+        <img class="ready-gif rg5" src="assets/gifs/AreYouReady/suprize-girl.gif" alt="" draggable="false">
+        <img class="ready-gif rg6" src="assets/gifs/AreYouReady/thinking.gif" alt="" draggable="false">
       </div>
+
+      <!-- Main content remains fully readable and clickable -->
+      <div class="ready-content">
+        <h2>Are You Ready? 👀</h2>
+        <p class="subtitle">Something tiny and silly is waiting... 🐽</p>
+        <div class="choice-row">
+          <button class="primary" id="yesBtn">YES 😎</button>
+          <button class="secondary" id="noBtn">NO 😑</button>
+        </div>
+      </div>
+
     </section>
 
     <!-- 3. Birthday celebration -->
@@ -184,16 +197,6 @@
 
   <!-- Reusable reaction popup: different GIF + message for each action -->
   <div id="reactionOverlay" class="reaction-overlay hidden" aria-hidden="true">
-
-    <!-- Wrong-DOB floating corner GIFs -->
-    <div class="wrong-dob-gif-decor" aria-hidden="true">
-      <img src="assets/gifs/WrongDOB/OMG.gif" alt="">
-      <img src="assets/gifs/WrongDOB/ohh.gif" alt="">
-      <img src="assets/gifs/WrongDOB/angry.gif" alt="">
-      <img src="assets/gifs/WrongDOB/Angry_girl.gif" alt="">
-      <img src="assets/gifs/WrongDOB/cryyy.gif" alt="">
-    </div>
-
     <div class="reaction-modal">
       <button class="reaction-close" id="reactionClose" aria-label="Close">×</button>
       <img id="reactionGif" class="reaction-gif" src="" alt="Pig reaction">
