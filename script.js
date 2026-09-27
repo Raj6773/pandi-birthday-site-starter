@@ -23,7 +23,7 @@ const REACTION_GIFS = {
 
   no: ["NoReady/furious_pig.gif"],
 
-  sorry: ["laughpig.gif"]
+  sorry: ["Sorry/weeping_pig.gif"]
 };
 
 /* ---------- page navigation ---------- */
@@ -159,11 +159,7 @@ document.getElementById("noBtn").onclick = () => {
         show("readyScreen");
       };
 
-      /* Let the crying/sorry GIF and silly message stay visible for a moment. */
-      reactionTimer = setTimeout(() => {
-        closeReaction();
-        show("readyScreen");
-      }, 2800);
+
     }
   });
 };
