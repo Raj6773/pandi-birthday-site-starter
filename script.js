@@ -1460,6 +1460,8 @@ if(surpriseVideo){
 
 /* ---------- surprise button ---------- */
 
+const surpriseBtn =
+  document.getElementById("surpriseBtn");
 surpriseBtn.onclick = () => {
 
   show("surpriseScreen");
