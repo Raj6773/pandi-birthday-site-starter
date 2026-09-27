@@ -17,14 +17,11 @@ const CONFIG = {
    All files should be inside assets/gifs/
 --------------------------------------------- */
 const REACTION_GIFS = {
-  /* WRONG DOB:
-     The CENTER of the popup is always scarepig.gif.
-     The 5 WrongDOB GIFs are separately placed around the corners in index.html. */
   wrongBirthday: [
     "scarepig.gif"
   ],
 
-  no: ["kingpig.gif"],
+  no: ["NoReady/furious_pig.gif"],
 
   sorry: ["laughpig.gif"]
 };
@@ -51,6 +48,7 @@ const reactionAction = document.getElementById("reactionAction");
 const reactionClose = document.getElementById("reactionClose");
 
 const wrongDobGifs = document.getElementById("wrongDobGifs");
+const noReadyGifs = document.getElementById("noReadyGifs");
 
 let reactionTimer = null;
 
@@ -74,10 +72,17 @@ function openReaction({gif, emoji, title, message, buttonText, action}){
     is being used for the wrong birthday reaction.
   */
   if(gif === "scarepig.gif"){
-    wrongDobGifs.classList.remove("hidden");
-  }else{
-    wrongDobGifs.classList.add("hidden");
-  }
+  wrongDobGifs.classList.remove("hidden");
+  noReadyGifs.classList.add("hidden");
+
+}else if(gif === "NoReady/furious_pig.gif"){
+  noReadyGifs.classList.remove("hidden");
+  wrongDobGifs.classList.add("hidden");
+
+}else{
+  wrongDobGifs.classList.add("hidden");
+  noReadyGifs.classList.add("hidden");
+}
 
   reactionOverlay.classList.remove("hidden");
   reactionOverlay.setAttribute("aria-hidden", "false");
@@ -88,6 +93,7 @@ function closeReaction(){
   clearTimeout(reactionTimer);
 
   wrongDobGifs.classList.add("hidden");
+noReadyGifs.classList.add("hidden");
 
   reactionOverlay.classList.add("hidden");
   reactionOverlay.setAttribute("aria-hidden", "true");
