@@ -1448,3 +1448,107 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     transform:translateX(-50%);
   }
 }
+
+
+/* =========================================================
+   FINAL FIX — NO READY + SORRY GIF VISIBILITY / HOVER
+   ========================================================= */
+
+/* Keep decorative GIFs above the dim background, but below
+   the reaction card so they remain visible around it. */
+.reaction-overlay{
+  isolation:isolate;
+}
+
+.no-ready-gif-decor,
+.sorry-gif-decor{
+  z-index:140;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.reaction-modal{
+  z-index:160;
+}
+
+/* Stable GIF positioning + floating animation. */
+.no-ready-gif-decor .no-ready-gif,
+.sorry-gif-decor .sorry-gif{
+  width:76px;
+  height:76px;
+  pointer-events:auto;
+  will-change:transform,opacity;
+  transform-origin:center;
+}
+
+/* Desktop: hover now works because the float animation is paused
+   while the pointer is actually over the GIF. */
+@media (hover:hover) and (pointer:fine){
+  .no-ready-gif-decor .no-ready-gif:hover,
+  .sorry-gif-decor .sorry-gif:hover{
+    animation-play-state:paused;
+    transform:scale(1.18);
+    filter:drop-shadow(0 14px 25px rgba(190,70,120,.32));
+    z-index:200;
+  }
+}
+
+/* Touch devices: give a visible press effect instead of relying
+   on :hover, which behaves inconsistently on phones. */
+@media (hover:none), (pointer:coarse){
+  .no-ready-gif-decor .no-ready-gif:active,
+  .sorry-gif-decor .sorry-gif:active{
+    animation-play-state:paused;
+    transform:scale(1.12);
+    filter:drop-shadow(0 12px 22px rgba(190,70,120,.30));
+  }
+}
+
+/* Keep the fifth Sorry GIF at the bottom center, fully visible. */
+.sorry-gif-decor .sr5{
+  left:50%;
+  bottom:1%;
+  transform:translateX(-50%);
+}
+
+@media(max-width:600px){
+  .no-ready-gif-decor .no-ready-gif,
+  .sorry-gif-decor .sorry-gif{
+    width:60px;
+    height:60px;
+  }
+
+  .no-ready-gif-decor .nr1,
+  .sorry-gif-decor .sr1{left:0;top:1%}
+
+  .no-ready-gif-decor .nr2,
+  .sorry-gif-decor .sr2{right:0;top:2%}
+
+  .no-ready-gif-decor .nr3,
+  .sorry-gif-decor .sr3{left:0;top:49%}
+
+  .no-ready-gif-decor .nr4,
+  .sorry-gif-decor .sr4{right:0;top:49%}
+
+  .no-ready-gif-decor .nr5{left:0;bottom:1%}
+  .no-ready-gif-decor .nr6{right:0;bottom:1%}
+
+  .sorry-gif-decor .sr5{
+    left:50%;
+    bottom:1%;
+    transform:translateX(-50%);
+  }
+}
+
+/* Smooth refresh transition for every decorative GIF. */
+.no-ready-gif-decor .no-ready-gif,
+.sorry-gif-decor .sorry-gif{
+  transition:opacity .25s ease, transform .25s ease, filter .25s ease;
+}
+
+.no-ready-gif-decor .no-ready-gif.gif-changing,
+.sorry-gif-decor .sorry-gif.gif-changing{
+  opacity:0;
+  transform:scale(.92);
+}
+
