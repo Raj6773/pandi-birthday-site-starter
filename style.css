@@ -752,20 +752,38 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 }
 
 /* Center GIF: visible behind the content, but intentionally subtle */
-#readyScreen .ready-gif-center{
+.ready-gif-center{
   position:absolute;
+  z-index:1;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:min(420px,48vw);
-  height:min(420px,48vw);
+
+  width:min(360px,40vw);
+  height:min(360px,40vw);
+
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:1;
+
   pointer-events:none;
-  opacity:.13;
-  filter:drop-shadow(0 12px 24px rgba(180,70,115,.12));
+
+  /* Clearly visible but still behind the content */
+  opacity:.55;
+
+  filter:
+    drop-shadow(0 12px 25px rgba(180,70,115,.16));
+}
+
+.ready-gif-center img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+
+  user-select:none;
+  -webkit-user-select:none;
+
+  display:block;
 }
 
 #readyScreen .ready-gif-center img{
