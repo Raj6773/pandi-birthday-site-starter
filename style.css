@@ -617,3 +617,155 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     transform:none;
   }
 }
+
+/* =========================================================
+   DATE OF BIRTH PAGE — SMALL FLOATING GIFS
+   ========================================================= */
+
+#birthdayScreen .dob-gif-decor{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:1;
+  overflow:hidden;
+}
+
+#birthdayScreen .dob-gif-decor img{
+  position:absolute;
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
+  filter:drop-shadow(0 5px 10px rgba(190,70,120,.13));
+  animation:dobGifFloat 5.2s ease-in-out infinite;
+  opacity:.92;
+}
+
+/* Small, balanced positions */
+#birthdayScreen .dob-gif-decor img:nth-child(1){
+  left:5%;
+  top:15%;
+  width:52px;
+  height:52px;
+  animation-duration:5.2s;
+}
+
+#birthdayScreen .dob-gif-decor img:nth-child(2){
+  right:5%;
+  top:17%;
+  width:58px;
+  height:58px;
+  animation-duration:5.8s;
+  animation-delay:-1.2s;
+}
+
+#birthdayScreen .dob-gif-decor img:nth-child(3){
+  left:7%;
+  top:52%;
+  width:55px;
+  height:55px;
+  animation-duration:5s;
+  animation-delay:-2s;
+}
+
+#birthdayScreen .dob-gif-decor img:nth-child(4){
+  right:6%;
+  top:53%;
+  width:55px;
+  height:55px;
+  animation-duration:5.5s;
+  animation-delay:-.8s;
+}
+
+#birthdayScreen .dob-gif-decor img:nth-child(5){
+  left:9%;
+  bottom:9%;
+  width:52px;
+  height:52px;
+  animation-duration:5.7s;
+  animation-delay:-2.7s;
+}
+
+#birthdayScreen .dob-gif-decor img:nth-child(6){
+  right:9%;
+  bottom:9%;
+  width:54px;
+  height:54px;
+  animation-duration:5.1s;
+  animation-delay:-1.7s;
+}
+
+#birthdayScreen > :not(.dob-gif-decor){
+  position:relative;
+  z-index:10;
+}
+
+@keyframes dobGifFloat{
+  0%,100%{
+    transform:translate3d(0,0,0) rotate(-2deg);
+  }
+  25%{
+    transform:translate3d(0,-7px,0) rotate(2deg);
+  }
+  50%{
+    transform:translate3d(3px,-12px,0) rotate(-1deg);
+  }
+  75%{
+    transform:translate3d(-3px,-6px,0) rotate(1.5deg);
+  }
+}
+
+@media(max-width:700px){
+  #birthdayScreen .dob-gif-decor img{
+    width:43px;
+    height:43px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(1){
+    left:2%;
+    top:12%;
+    width:40px;
+    height:40px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(2){
+    right:2%;
+    top:14%;
+    width:44px;
+    height:44px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(3){
+    left:2%;
+    top:48%;
+    width:42px;
+    height:42px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(4){
+    right:2%;
+    top:49%;
+    width:42px;
+    height:42px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(5){
+    left:4%;
+    bottom:7%;
+    width:40px;
+    height:40px;
+  }
+
+  #birthdayScreen .dob-gif-decor img:nth-child(6){
+    right:4%;
+    bottom:7%;
+    width:42px;
+    height:42px;
+  }
+}
+
