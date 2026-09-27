@@ -355,6 +355,86 @@ video{display:block;width:100%;max-height:70svh;background:#111}
   100%{transform:translateY(0) scale(1);opacity:1}
 }
 
+/* =========================================================
+   WRONG DOB POPUP — 5 CORNER GIFS + FIXED CENTER SCARE PIG
+   ========================================================= */
+
+.reaction-overlay{
+  isolation:isolate;
+}
+
+.wrong-dob-gif-decor{
+  position:absolute;
+  inset:0;
+  z-index:101;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.wrong-dob-gif-decor .wrong-gif{
+  position:absolute;
+  width:78px;
+  height:78px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 8px 15px rgba(190,70,120,.20));
+  animation:wrongDobFloat 4.2s ease-in-out infinite;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.wrong-dob-gif-decor .wg1{
+  left:2%;
+  top:7%;
+}
+
+.wrong-dob-gif-decor .wg2{
+  right:2%;
+  top:8%;
+  animation-delay:-.8s;
+}
+
+.wrong-dob-gif-decor .wg3{
+  left:1%;
+  top:43%;
+  animation-delay:-1.6s;
+}
+
+.wrong-dob-gif-decor .wg4{
+  right:1%;
+  top:45%;
+  animation-delay:-2.4s;
+}
+
+.wrong-dob-gif-decor .wg5{
+  left:50%;
+  bottom:4%;
+  transform:translateX(-50%);
+  animation-delay:-3.1s;
+}
+
+.reaction-modal{
+  z-index:120;
+}
+
+@keyframes wrongDobFloat{
+  0%,100%{transform:translate3d(0,0,0) rotate(-2deg)}
+  50%{transform:translate3d(0,-10px,0) rotate(2deg)}
+}
+
+@media(max-width:600px){
+  .wrong-dob-gif-decor .wrong-gif{
+    width:58px;
+    height:58px;
+  }
+
+  .wrong-dob-gif-decor .wg1{left:0%;top:6%}
+  .wrong-dob-gif-decor .wg2{right:0%;top:7%}
+  .wrong-dob-gif-decor .wg3{left:0%;top:39%}
+  .wrong-dob-gif-decor .wg4{right:0%;top:41%}
+  .wrong-dob-gif-decor .wg5{bottom:2%}
+}
+
 /* =========================
    CELEBRATION GIFS
    ========================= */
@@ -628,7 +708,7 @@ video{display:block;width:100%;max-height:70svh;background:#111}
   width:100%;
   height:100%;
   pointer-events:none;
-  z-index:1;
+  z-index:5;
   overflow:hidden;
 }
 
@@ -646,16 +726,16 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(1){
-  left:4%;
-  top:12%;
+  left:2%;
+  top:9%;
   width:82px;
   height:82px;
   animation-duration:4.6s;
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(2){
-  right:5%;
-  top:14%;
+  right:2%;
+  top:10%;
   width:88px;
   height:88px;
   animation-duration:5.1s;
@@ -663,26 +743,26 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(3){
-  left:5%;
-  top:47%;
-  width:90px;
-  height:90px;
+  left:1%;
+  top:42%;
+  width:82px;
+  height:82px;
   animation-duration:4.2s;
   animation-delay:-2s;
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(4){
-  right:5%;
-  top:49%;
-  width:92px;
-  height:92px;
+  right:1%;
+  top:44%;
+  width:84px;
+  height:84px;
   animation-duration:4.8s;
   animation-delay:-.7s;
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(5){
-  left:8%;
-  bottom:8%;
+  left:2%;
+  bottom:5%;
   width:82px;
   height:82px;
   animation-duration:5.2s;
@@ -690,8 +770,8 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 }
 
 #birthdayScreen .dob-gif-decor img:nth-child(6){
-  right:8%;
-  bottom:8%;
+  right:2%;
+  bottom:5%;
   width:86px;
   height:86px;
   animation-duration:4.8s;
@@ -700,7 +780,7 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 
 #birthdayScreen > :not(.dob-gif-decor){
   position:relative;
-  z-index:10;
+  z-index:6;
 }
 
 @keyframes dobGifFloat{
@@ -716,12 +796,12 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     height:58px;
   }
 
-  #birthdayScreen .dob-gif-decor img:nth-child(1){left:1%;top:10%}
-  #birthdayScreen .dob-gif-decor img:nth-child(2){right:1%;top:12%}
-  #birthdayScreen .dob-gif-decor img:nth-child(3){left:1%;top:45%}
-  #birthdayScreen .dob-gif-decor img:nth-child(4){right:1%;top:47%}
-  #birthdayScreen .dob-gif-decor img:nth-child(5){left:2%;bottom:7%}
-  #birthdayScreen .dob-gif-decor img:nth-child(6){right:2%;bottom:7%}
+  #birthdayScreen .dob-gif-decor img:nth-child(1){left:0%;top:8%}
+  #birthdayScreen .dob-gif-decor img:nth-child(2){right:0%;top:9%}
+  #birthdayScreen .dob-gif-decor img:nth-child(3){left:0%;top:39%}
+  #birthdayScreen .dob-gif-decor img:nth-child(4){right:0%;top:41%}
+  #birthdayScreen .dob-gif-decor img:nth-child(5){left:0%;bottom:5%}
+  #birthdayScreen .dob-gif-decor img:nth-child(6){right:0%;bottom:5%}
 }
 
 
@@ -768,8 +848,8 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 
   pointer-events:none;
 
-  /* Clearly visible but still behind the content */
-  opacity:.55;
+  /* Clearly visible, while the text/buttons stay above it */
+  opacity:.38;
 
   filter:
     drop-shadow(0 12px 25px rgba(180,70,115,.16));
@@ -801,7 +881,7 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 #readyScreen .ready-corner-gifs{
   position:absolute;
   inset:0;
-  z-index:5;
+  z-index:15;
   pointer-events:none;
 }
 
@@ -870,9 +950,9 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 
 @media(max-width:600px){
   #readyScreen .ready-gif-center{
-    width:270px;
-    height:270px;
-    opacity:.10;
+    width:290px;
+    height:290px;
+    opacity:.28;
   }
 
   #readyScreen .ready-gif{
