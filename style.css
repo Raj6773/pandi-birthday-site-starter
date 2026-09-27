@@ -806,3 +806,37 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     animation-delay:-1.7s !important;
   }
 }
+
+
+/* =========================================================
+   WRONG DOB GIFS — DESKTOP HOVER
+   ========================================================= */
+
+@media (min-width: 701px) {
+
+  .reaction-gif {
+    animation: wrongDobHover 4.8s ease-in-out infinite !important;
+    will-change: transform;
+  }
+
+}
+
+@keyframes wrongDobHover {
+
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+
+  25% {
+    transform: translate3d(3px, -8px, 0) rotate(2deg);
+  }
+
+  50% {
+    transform: translate3d(-2px, -15px, 0) rotate(-1deg);
+  }
+
+  75% {
+    transform: translate3d(2px, -7px, 0) rotate(1.5deg);
+  }
+
+}
