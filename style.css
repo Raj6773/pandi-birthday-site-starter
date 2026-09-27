@@ -996,3 +996,86 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     bottom:26%;
   }
 }
+
+
+/* =========================================================
+   GLOBAL GIF / STICKER LAYER
+   ALL GIFs stay ABOVE THE PAGE BACKGROUND
+   ========================================================= */
+
+/* Every GIF image gets a visible layer */
+.screen img[src*="assets/gifs/"]{
+  position:relative;
+  z-index:10;
+}
+
+/* DOB floating GIF layer */
+#birthdayScreen .dob-gif-decor{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  pointer-events:none;
+}
+
+/* Ready-page GIF layers */
+#readyScreen .ready-gif-center{
+  z-index:10;
+  pointer-events:none;
+}
+
+#readyScreen .ready-corner-gifs{
+  z-index:11;
+  pointer-events:none;
+}
+
+/* Celebration GIFs */
+#celebrateScreen .party-pigs{
+  position:relative;
+  z-index:10;
+}
+
+#celebrateScreen .party-pigs img{
+  position:relative;
+  z-index:11;
+}
+
+/* Start pig */
+#birthdayScreen .start-pig{
+  position:relative;
+  z-index:12;
+}
+
+/* Reaction popup GIF */
+.reaction-overlay .reaction-gif{
+  position:relative;
+  z-index:130;
+}
+
+/* Wrong-DOB corner GIFs */
+.wrong-dob-gif-decor{
+  position:absolute;
+  z-index:130;
+}
+
+.wrong-dob-gif-decor .wrong-gif{
+  position:absolute;
+  z-index:131;
+}
+
+/* Never let the GIF layer disappear behind the page */
+.screen{
+  isolation:isolate;
+}
+
+/* Main interactive content remains readable above decorative GIFs */
+.screen > .card,
+.screen > .puzzle-card,
+.screen > .success-box,
+.screen > .ready-content,
+.screen > h1,
+.screen > h2,
+.screen > .subtitle,
+.screen > button{
+  position:relative;
+  z-index:20;
+}
