@@ -17,8 +17,16 @@ const CONFIG = {
    All files should be inside assets/gifs/
 --------------------------------------------- */
 const REACTION_GIFS = {
-  wrongBirthday: ["scarepig.gif"],
+  wrongBirthday: [
+    "WrongDOB/OMG.gif",
+    "WrongDOB/ohh.gif",
+    "WrongDOB/angry.gif",
+    "WrongDOB/Angry_girl.gif",
+    "WrongDOB/cryyy.gif"
+  ],
+
   no: ["kingpig.gif"],
+
   sorry: ["laughpig.gif"]
 };
 
@@ -89,9 +97,9 @@ document.getElementById("birthdayBtn").onclick = () => {
     show("readyScreen");
   } else {
     openReaction({
-      gif: randomGif(REACTION_GIFS.wrongBirthday),
-      emoji: "😤🐷",
-      title: "WRONGGG! 😤",
+      gif: "scarepig.gif",
+      emoji: "",
+      title: "WRONGGG!",
       message: "This is only for Pandi Pakodi... you can't fool the pig 🐷",
       buttonText: "Try Again 🥺",
       action: () => {
