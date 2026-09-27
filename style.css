@@ -1312,3 +1312,139 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     bottom:2%;
   }
 }
+
+/* =========================================================
+   FINAL REACTION GIF POLISH
+   Separate NO and SORRY worlds + smooth GIF transitions
+   ========================================================= */
+
+.reaction-overlay .reaction-gif{
+  opacity:1;
+  transform:scale(1);
+  transition:opacity .22s ease, transform .22s ease, filter .22s ease;
+}
+
+.reaction-overlay .reaction-gif.gif-changing{
+  opacity:0;
+  transform:scale(.94);
+}
+
+/* Decorative GIFs fade/scale when refreshed. */
+.no-ready-gif-decor .no-ready-gif,
+.sorry-gif-decor .sorry-gif{
+  transition:opacity .22s ease, transform .22s ease, filter .22s ease;
+}
+
+.no-ready-gif-decor .no-ready-gif.gif-changing,
+.sorry-gif-decor .sorry-gif.gif-changing{
+  opacity:0;
+}
+
+/* -------------------------
+   NO READY WORLD
+   ------------------------- */
+.no-ready-gif-decor{
+  position:absolute;
+  inset:0;
+  z-index:130;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.no-ready-gif-decor .no-ready-gif{
+  position:absolute;
+  width:68px;
+  height:68px;
+  object-fit:contain;
+  display:block;
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-drag:none;
+  filter:drop-shadow(0 8px 15px rgba(190,70,120,.20));
+  animation:noReadyFloat 4.2s ease-in-out infinite;
+}
+
+.no-ready-gif-decor .no-ready-gif:hover{
+  transform:scale(1.18);
+  filter:drop-shadow(0 14px 25px rgba(190,70,120,.32));
+  z-index:200;
+}
+
+/* -------------------------
+   SORRY WORLD — DIFFERENT GIFS
+   ------------------------- */
+.sorry-gif-decor{
+  position:absolute;
+  inset:0;
+  z-index:130;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.sorry-gif-decor .sorry-gif{
+  position:absolute;
+  width:68px;
+  height:68px;
+  object-fit:contain;
+  display:block;
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-drag:none;
+  filter:drop-shadow(0 8px 15px rgba(190,70,120,.20));
+  animation:noReadyFloat 4.2s ease-in-out infinite;
+}
+
+.sorry-gif-decor .sorry-gif:hover{
+  transform:scale(1.18);
+  filter:drop-shadow(0 14px 25px rgba(190,70,120,.32));
+  z-index:200;
+}
+
+/* NO positions */
+.no-ready-gif-decor .nr1{left:1%;top:3%}
+.no-ready-gif-decor .nr2{right:1%;top:4%;animation-delay:-.7s}
+.no-ready-gif-decor .nr3{left:1%;top:48%;animation-delay:-1.4s}
+.no-ready-gif-decor .nr4{right:1%;top:48%;animation-delay:-2.1s}
+.no-ready-gif-decor .nr5{left:1%;bottom:2%;animation-delay:-2.8s}
+.no-ready-gif-decor .nr6{right:1%;bottom:2%;animation-delay:-1.8s}
+
+/* SORRY positions */
+.sorry-gif-decor .sr1{left:1%;top:3%;animation-delay:-.35s}
+.sorry-gif-decor .sr2{right:1%;top:4%;animation-delay:-1.05s}
+.sorry-gif-decor .sr3{left:1%;top:48%;animation-delay:-1.75s}
+.sorry-gif-decor .sr4{right:1%;top:48%;animation-delay:-2.45s}
+.sorry-gif-decor .sr5{left:50%;bottom:2%;transform:translateX(-50%);animation-delay:-3.15s}
+
+.reaction-modal{
+  position:relative;
+  z-index:150;
+}
+
+@media(max-width:600px){
+  .no-ready-gif-decor .no-ready-gif,
+  .sorry-gif-decor .sorry-gif{
+    width:58px;
+    height:58px;
+  }
+
+  .no-ready-gif-decor .nr1,
+  .sorry-gif-decor .sr1{left:0;top:2%}
+
+  .no-ready-gif-decor .nr2,
+  .sorry-gif-decor .sr2{right:0;top:3%}
+
+  .no-ready-gif-decor .nr3,
+  .sorry-gif-decor .sr3{left:0;top:48%}
+
+  .no-ready-gif-decor .nr4,
+  .sorry-gif-decor .sr4{right:0;top:48%}
+
+  .no-ready-gif-decor .nr5{left:0;bottom:2%}
+  .no-ready-gif-decor .nr6{right:0;bottom:2%}
+
+  .sorry-gif-decor .sr5{
+    left:50%;
+    bottom:2%;
+    transform:translateX(-50%);
+  }
+}

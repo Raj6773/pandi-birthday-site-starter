@@ -12,33 +12,57 @@ const CONFIG = {
   name: "Pandi"
 };
 
+
 /* ---------- reaction GIF choices ----------
    Change the filenames here whenever you want.
    All files should be inside assets/gifs/
 --------------------------------------------- */
+
 const REACTION_GIFS = {
   wrongBirthday: [
     "scarepig.gif"
   ],
 
-  no: ["NoReady/furious_pig.gif"],
+  no: [
+    "NoReady/furious_pig.gif"
+  ],
 
-  sorry: ["Sorry/weeping_pig.gif"]
+  sorry: [
+    "Sorry/weeping_pig.gif"
+  ]
 };
 
+
 /* ---------- page navigation ---------- */
+
 const screens = [...document.querySelectorAll(".screen")];
+
 function show(id){
-  screens.forEach(s => s.classList.toggle("active", s.id === id));
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-function toast(msg){
-  const el=document.getElementById("toast");
-  el.textContent=msg; el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"),1800);
+  screens.forEach(s =>
+    s.classList.toggle("active", s.id === id)
+  );
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
+
+function toast(msg){
+  const el = document.getElementById("toast");
+
+  el.textContent = msg;
+  el.classList.add("show");
+
+  setTimeout(() => {
+    el.classList.remove("show");
+  }, 1800);
+}
+
+
 /* ---------- reusable reaction popup ---------- */
+
 const reactionOverlay = document.getElementById("reactionOverlay");
 const reactionGif = document.getElementById("reactionGif");
 const reactionEmoji = document.getElementById("reactionEmoji");
@@ -49,183 +73,840 @@ const reactionClose = document.getElementById("reactionClose");
 
 const wrongDobGifs = document.getElementById("wrongDobGifs");
 const noReadyGifs = document.getElementById("noReadyGifs");
+const sorryGifs = document.getElementById("sorryGifs");
 
 let reactionTimer = null;
 
-function randomGif(list){
-  return list[Math.floor(Math.random() * list.length)];
-}
 
-function openReaction({gif, emoji, title, message, buttonText, action}){
-  clearTimeout(reactionTimer);
+/* ---------- smooth main GIF transition ---------- */
 
-  reactionGif.src = `assets/gifs/${gif}`;
-  reactionEmoji.textContent = emoji || "";
-  reactionTitle.textContent = title;
-  reactionMessage.textContent = message;
-  reactionAction.textContent = buttonText || "Okay";
-  reactionAction.onclick = action || closeReaction;
+function setReactionGif(src){
+
+  if(!reactionGif) return;
+
+  const nextSrc = `assets/gifs/${src}`;
+
+  reactionGif.classList.add("gif-changing");
 
   /*
-    WRONG DOB GIFS:
-    Show the 5 corner GIFs ONLY when scarepig.gif
-    is being used for the wrong birthday reaction.
+    If the same GIF is already loaded,
+    just play the fade transition.
   */
-  if(gif === "scarepig.gif"){
-  wrongDobGifs.classList.remove("hidden");
-  noReadyGifs.classList.add("hidden");
 
-}else if(gif === "NoReady/furious_pig.gif"){
-  noReadyGifs.classList.remove("hidden");
-  wrongDobGifs.classList.add("hidden");
+  if(reactionGif.src.endsWith(nextSrc)){
 
-}else{
-  wrongDobGifs.classList.add("hidden");
-  noReadyGifs.classList.add("hidden");
+    requestAnimationFrame(() => {
+      reactionGif.classList.remove("gif-changing");
+    });
+
+    return;
+  }
+
+
+  /*
+    Preload the new GIF first.
+    This prevents the image area from
+    flashing while the GIF loads.
+  */
+
+  const preloader = new Image();
+
+
+  const showNext = () => {
+
+    reactionGif.src = nextSrc;
+
+    requestAnimationFrame(() => {
+
+      requestAnimationFrame(() => {
+
+        reactionGif.classList.remove("gif-changing");
+
+      });
+
+    });
+
+  };
+
+
+  preloader.onload = showNext;
+
+  preloader.onerror = showNext;
+
+  preloader.src = nextSrc;
 }
 
-  reactionOverlay.classList.remove("hidden");
-  reactionOverlay.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
+
+/* ---------- decorative GIF transition ---------- */
+
+function shuffleDecorativeGifs(container, files){
+
+  if(!container) return;
+
+  const imgs = [
+    ...container.querySelectorAll("img")
+  ];
+
+
+  /*
+    Shuffle the decorative GIFs
+    so they can change on every click.
+  */
+
+  const shuffled = [...files].sort(
+    () => Math.random() - 0.5
+  );
+
+
+  imgs.forEach((img, index) => {
+
+    const next =
+      shuffled[index % shuffled.length];
+
+    const nextSrc =
+      `assets/gifs/${next}`;
+
+
+    img.classList.add("gif-changing");
+
+
+    const preloader = new Image();
+
+
+    const showNext = () => {
+
+      img.src = nextSrc;
+
+      requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+          img.classList.remove(
+            "gif-changing"
+          );
+
+        });
+
+      });
+
+    };
+
+
+    preloader.onload = showNext;
+
+    preloader.onerror = () => {
+      img.classList.remove("gif-changing");
+    };
+
+
+    preloader.src = nextSrc;
+
+  });
+
 }
 
-function closeReaction(){
+
+/* ---------- NO world GIFs ---------- */
+
+const NO_DECOR_GIFS = [
+
+  "NoReady/angry.gif",
+
+  "NoReady/Crying_girl.gif",
+
+  "NoReady/ohh.gif",
+
+  "NoReady/OMG.gif",
+
+  "NoReady/what.gif",
+
+  "NoReady/cryyy.gif"
+
+];
+
+
+/* ---------- SORRY world GIFs ---------- */
+
+const SORRY_DECOR_GIFS = [
+
+  "Sorry/crying.gif",
+
+  "Sorry/crying-saree.gif",
+
+  "Sorry/Crying_girl.gif",
+
+  "Sorry/what.gif",
+
+  "Sorry/cryyy.gif"
+
+];
+
+
+/* ---------- random GIF ---------- */
+
+function randomGif(list){
+
+  return list[
+    Math.floor(
+      Math.random() * list.length
+    )
+  ];
+
+}
+
+
+/* ---------- open reaction ---------- */
+
+function openReaction({
+  gif,
+  emoji,
+  title,
+  message,
+  buttonText,
+  action
+}){
+
   clearTimeout(reactionTimer);
 
-  wrongDobGifs.classList.add("hidden");
-noReadyGifs.classList.add("hidden");
 
-  reactionOverlay.classList.add("hidden");
-  reactionOverlay.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("modal-open");
+  /*
+    Change the center GIF
+    with smooth transition.
+  */
+
+  setReactionGif(gif);
+
+
+  reactionEmoji.textContent =
+    emoji || "";
+
+  reactionTitle.textContent =
+    title;
+
+  reactionMessage.textContent =
+    message;
+
+  reactionAction.textContent =
+    buttonText || "Okay";
+
+  reactionAction.onclick =
+    action || closeReaction;
+
+
+  /*
+    WRONG DOB WORLD
+  */
+
+  if(gif === "scarepig.gif"){
+
+    wrongDobGifs.classList.remove(
+      "hidden"
+    );
+
+    noReadyGifs.classList.add(
+      "hidden"
+    );
+
+    sorryGifs.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  /*
+    NO WORLD
+  */
+
+  else if(
+    gif === "NoReady/furious_pig.gif"
+  ){
+
+    wrongDobGifs.classList.add(
+      "hidden"
+    );
+
+    sorryGifs.classList.add(
+      "hidden"
+    );
+
+    noReadyGifs.classList.remove(
+      "hidden"
+    );
+
+
+    /*
+      Refresh NO decorative GIFs
+      every time NO is clicked.
+    */
+
+    shuffleDecorativeGifs(
+      noReadyGifs,
+      NO_DECOR_GIFS
+    );
+
+  }
+
+
+  /*
+    SORRY WORLD
+  */
+
+  else if(
+    gif === "Sorry/weeping_pig.gif"
+  ){
+
+    wrongDobGifs.classList.add(
+      "hidden"
+    );
+
+    noReadyGifs.classList.add(
+      "hidden"
+    );
+
+    sorryGifs.classList.remove(
+      "hidden"
+    );
+
+
+    /*
+      Refresh SORRY decorative GIFs
+      every time Sorry is clicked.
+    */
+
+    shuffleDecorativeGifs(
+      sorryGifs,
+      SORRY_DECOR_GIFS
+    );
+
+  }
+
+
+  /*
+    Anything else:
+    hide decorative GIFs.
+  */
+
+  else{
+
+    wrongDobGifs.classList.add(
+      "hidden"
+    );
+
+    noReadyGifs.classList.add(
+      "hidden"
+    );
+
+    sorryGifs.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  reactionOverlay.classList.remove(
+    "hidden"
+  );
+
+  reactionOverlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
 }
 
-reactionClose.onclick = closeReaction;
-reactionOverlay.addEventListener("click", (e)=>{
-  if(e.target === reactionOverlay) closeReaction();
-});
+
+/* ---------- close reaction ---------- */
+
+function closeReaction(){
+
+  clearTimeout(reactionTimer);
+
+
+  wrongDobGifs.classList.add(
+    "hidden"
+  );
+
+  noReadyGifs.classList.add(
+    "hidden"
+  );
+
+  sorryGifs.classList.add(
+    "hidden"
+  );
+
+
+  reactionOverlay.classList.add(
+    "hidden"
+  );
+
+  reactionOverlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+
+/* ---------- reaction close buttons ---------- */
+
+reactionClose.onclick =
+  closeReaction;
+
+
+reactionOverlay.addEventListener(
+  "click",
+  (e) => {
+
+    if(e.target === reactionOverlay){
+
+      closeReaction();
+
+    }
+
+  }
+);
+
 
 /* ---------- birthday check ---------- */
-const day = document.getElementById("day");
-const month = document.getElementById("month");
-const year = document.getElementById("year");
 
-document.getElementById("birthdayBtn").onclick = () => {
+const day =
+  document.getElementById("day");
+
+const month =
+  document.getElementById("month");
+
+const year =
+  document.getElementById("year");
+
+
+document.getElementById(
+  "birthdayBtn"
+).onclick = () => {
+
+
   const enteredBirthday =
     `${year.value}-${month.value.padStart(2, "0")}-${day.value.padStart(2, "0")}`;
 
-  if (enteredBirthday === CONFIG.correctBirthday) {
+
+  /*
+    Correct birthday
+  */
+
+  if(
+    enteredBirthday ===
+    CONFIG.correctBirthday
+  ){
+
     show("readyScreen");
-  } else {
-    openReaction({
-      gif: randomGif(REACTION_GIFS.wrongBirthday),
-      emoji: "😤🐷",
-      title: "WRONGGG! 😤",
-      message: "This is only for Pandi Pakodi... you can't fool the pig 🐷",
-      buttonText: "Try Again 🥺",
-      action: () => {
-        closeReaction();
-        day.value = "";
-        month.value = "";
-        year.value = "";
-        day.focus();
-      }
-    });
-    toast("Wrong birthday 😤");
+
   }
-};
 
-/* ---------- ready page ---------- */
 
-document.getElementById("yesBtn").onclick = () => {
-  show("celebrateScreen");
-};
+  /*
+    Wrong birthday
+  */
 
-document.getElementById("noBtn").onclick = () => {
-  openReaction({
-    gif: randomGif(REACTION_GIFS.no),
-    emoji: "😡💢",
-    title: "NO?! 😤",
-    message: "Excuse me madam... WHO SAID NO? 🐷💢",
-    buttonText: "Sorry 🥺",
-    action: () => {
-      reactionGif.src = `assets/gifs/${randomGif(REACTION_GIFS.sorry)}`;
-      reactionEmoji.textContent = "🥺😭";
-      reactionTitle.textContent = "Hmmmm... 🥺";
-      reactionMessage.textContent = "Okay okayyy... forgiveness this time 😭🩷";
-      reactionAction.textContent = "Okayyy 🐷";
-      reactionAction.onclick = () => {
+  else{
+
+    openReaction({
+
+      gif:
+        randomGif(
+          REACTION_GIFS.wrongBirthday
+        ),
+
+      emoji:
+        "😤🐷",
+
+      title:
+        "WRONGGG! 😤",
+
+      message:
+        "This is only for Pandi Pakodi... you can't fool the pig 🐷",
+
+      buttonText:
+        "Try Again 🥺",
+
+      action: () => {
+
         closeReaction();
-        show("readyScreen");
-      };
 
+        day.value = "";
+
+        month.value = "";
+
+        year.value = "";
+
+        day.focus();
+
+      }
+
+    });
+
+
+    toast(
+      "Wrong birthday 😤"
+    );
+
+  }
+
+};
+
+
+/* ---------- READY PAGE ---------- */
+
+
+/*
+  YES button
+*/
+
+document.getElementById(
+  "yesBtn"
+).onclick = () => {
+
+  show("celebrateScreen");
+
+};
+
+
+/*
+  NO button
+*/
+
+document.getElementById(
+  "noBtn"
+).onclick = () => {
+
+
+  openReaction({
+
+    gif:
+      randomGif(
+        REACTION_GIFS.no
+      ),
+
+    emoji:
+      "😡💢",
+
+    title:
+      "NO?! 😤",
+
+    message:
+      "Excuse me madam... WHO SAID NO? 🐷💢",
+
+    buttonText:
+      "Sorry 🥺",
+
+
+    /*
+      When she clicks Sorry:
+      completely switch from NO world
+      to the separate SORRY world.
+    */
+
+    action: () => {
+
+
+      /*
+        Change center pig
+        from furious pig
+        to weeping pig.
+      */
+
+      setReactionGif(
+        randomGif(
+          REACTION_GIFS.sorry
+        )
+      );
+
+
+      /*
+        Hide NO decorative GIFs.
+      */
+
+      noReadyGifs.classList.add(
+        "hidden"
+      );
+
+
+      /*
+        Show SORRY decorative GIFs.
+      */
+
+      sorryGifs.classList.remove(
+        "hidden"
+      );
+
+
+      /*
+        Randomize SORRY GIFs
+        with smooth transition.
+      */
+
+      shuffleDecorativeGifs(
+        sorryGifs,
+        SORRY_DECOR_GIFS
+      );
+
+
+      /*
+        Change text.
+      */
+
+      reactionEmoji.textContent =
+        "🥺😭";
+
+      reactionTitle.textContent =
+        "Hmmmm... 🥺";
+
+      reactionMessage.textContent =
+        "Okay okayyy... forgiveness this time 😭🩷";
+
+      reactionAction.textContent =
+        "Okayyy 🐷";
+
+
+      /*
+        Okayyy button
+      */
+
+      reactionAction.onclick =
+        () => {
+
+          closeReaction();
+
+          show("readyScreen");
+
+        };
 
     }
-  });
+
+  );
+
 };
+
 
 /* ---------- birthday celebration ---------- */
-const celebrateBtn = document.getElementById("celebrateBtn");
-const afterCelebrate = document.getElementById("afterCelebrate");
-let celebrationStarted = false;
+
+const celebrateBtn =
+  document.getElementById(
+    "celebrateBtn"
+  );
+
+const afterCelebrate =
+  document.getElementById(
+    "afterCelebrate"
+  );
+
+let celebrationStarted =
+  false;
+
 
 function startCelebration(){
-  const fx = document.getElementById("celebrationFx");
+
+  const fx =
+    document.getElementById(
+      "celebrationFx"
+    );
+
+
   fx.innerHTML = "";
-  fx.classList.add("show");
 
-  /* Balloons */
-  ["🎈","🎈","🎈","🎈","🎈","🎈","🎈","🎈"].forEach((emoji, i) => {
-    const balloon = document.createElement("span");
-    balloon.className = "fx-balloon";
-    balloon.textContent = emoji;
-    balloon.style.left = `${5 + Math.random() * 90}%`;
-    balloon.style.animationDelay = `${Math.random() * 1.2}s`;
-    balloon.style.animationDuration = `${3.2 + Math.random() * 2}s`;
-    fx.appendChild(balloon);
-  });
+  fx.classList.add(
+    "show"
+  );
 
-  /* Confetti / party popups */
-  const pieces = ["🎉","✨","🥳","💖","🎊","🐷","🎀","⭐"];
+
+  /*
+    Balloons
+  */
+
+  [
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈"
+  ].forEach(
+    (emoji, i) => {
+
+
+      const balloon =
+        document.createElement(
+          "span"
+        );
+
+
+      balloon.className =
+        "fx-balloon";
+
+
+      balloon.textContent =
+        emoji;
+
+
+      balloon.style.left =
+        `${5 + Math.random() * 90}%`;
+
+
+      balloon.style.animationDelay =
+        `${Math.random() * 1.2}s`;
+
+
+      balloon.style.animationDuration =
+        `${3.2 + Math.random() * 2}s`;
+
+
+      fx.appendChild(
+        balloon
+      );
+
+    }
+  );
+
+
+  /*
+    Confetti / party popups
+  */
+
+  const pieces = [
+    "🎉",
+    "✨",
+    "🥳",
+    "💖",
+    "🎊",
+    "🐷",
+    "🎀",
+    "⭐"
+  ];
+
+
   for(let i = 0; i < 30; i++){
-    const piece = document.createElement("span");
-    piece.className = "fx-confetti";
-    piece.textContent = pieces[i % pieces.length];
-    piece.style.left = `${Math.random() * 100}%`;
-    piece.style.top = `${5 + Math.random() * 25}%`;
-    piece.style.animationDelay = `${Math.random() * .9}s`;
-    piece.style.animationDuration = `${1.8 + Math.random() * 1.8}s`;
-    fx.appendChild(piece);
+
+    const piece =
+      document.createElement(
+        "span"
+      );
+
+
+    piece.className =
+      "fx-confetti";
+
+
+    piece.textContent =
+      pieces[
+        i % pieces.length
+      ];
+
+
+    piece.style.left =
+      `${Math.random() * 100}%`;
+
+
+    piece.style.top =
+      `${5 + Math.random() * 25}%`;
+
+
+    piece.style.animationDelay =
+      `${Math.random() * .9}s`;
+
+
+    piece.style.animationDuration =
+      `${1.8 + Math.random() * 1.8}s`;
+
+
+    fx.appendChild(
+      piece
+    );
+
   }
+
 
   setTimeout(() => {
-    fx.classList.remove("show");
+
+    fx.classList.remove(
+      "show"
+    );
+
     fx.innerHTML = "";
+
   }, 6000);
+
 }
 
+
 celebrateBtn.onclick = () => {
+
+
   if(!celebrationStarted){
+
     celebrationStarted = true;
-    afterCelebrate.classList.remove("hidden");
+
+    afterCelebrate.classList.remove(
+      "hidden"
+    );
+
   }
+
+
   startCelebration();
-  toast("PARTYYYY! 🎉🐷🎈");
+
+
+  toast(
+    "PARTYYYY! 🎉🐷🎈"
+  );
+
 };
 
-document.getElementById("giftBtn").onclick = () => {
+
+document.getElementById(
+  "giftBtn"
+).onclick = () => {
+
   initPuzzle();
+
   show("puzzleScreen");
+
 };
+
 
 /* ---------- 9-piece drag & place puzzle ---------- */
 
-const puzzleBoard = document.getElementById("puzzleBoard");
-const puzzlePieces = document.getElementById("puzzlePieces");
-const puzzleMessage = document.getElementById("puzzleMessage");
-const puzzleSolved = document.getElementById("puzzleSolved");
+const puzzleBoard =
+  document.getElementById(
+    "puzzleBoard"
+  );
+
+const puzzlePieces =
+  document.getElementById(
+    "puzzlePieces"
+  );
+
+const puzzleMessage =
+  document.getElementById(
+    "puzzleMessage"
+  );
+
+const puzzleSolved =
+  document.getElementById(
+    "puzzleSolved"
+  );
+
 
 let placedPieces = 0;
+
 let draggedPiece = null;
 
 
@@ -235,44 +916,95 @@ function createPuzzleBoard(){
 
   puzzleBoard.innerHTML = "";
 
+
   for(let i = 0; i < 9; i++){
 
-    const slot = document.createElement("div");
-
-    slot.className = "puzzle-slot";
-    slot.dataset.position = i;
-
-    puzzleBoard.appendChild(slot);
+    const slot =
+      document.createElement(
+        "div"
+      );
 
 
-    /* Desktop drag */
+    slot.className =
+      "puzzle-slot";
 
-    slot.addEventListener("dragover", (e)=>{
-      e.preventDefault();
 
-      if(!slot.classList.contains("correct")){
-        slot.classList.add("drag-over");
+    slot.dataset.position =
+      i;
+
+
+    puzzleBoard.appendChild(
+      slot
+    );
+
+
+    /*
+      Desktop drag
+    */
+
+    slot.addEventListener(
+      "dragover",
+      (e) => {
+
+        e.preventDefault();
+
+
+        if(
+          !slot.classList.contains(
+            "correct"
+          )
+        ){
+
+          slot.classList.add(
+            "drag-over"
+          );
+
+        }
+
       }
-    });
-
-    slot.addEventListener("dragleave", ()=>{
-      slot.classList.remove("drag-over");
-    });
-
-    slot.addEventListener("drop", (e)=>{
-      e.preventDefault();
-
-      slot.classList.remove("drag-over");
-
-      placePiece(slot);
-    });
+    );
 
 
-    /* Phone touch */
+    slot.addEventListener(
+      "dragleave",
+      () => {
 
-    slot.addEventListener("pointerup", ()=>{
-      placePiece(slot);
-    });
+        slot.classList.remove(
+          "drag-over"
+        );
+
+      }
+    );
+
+
+    slot.addEventListener(
+      "drop",
+      (e) => {
+
+        e.preventDefault();
+
+        slot.classList.remove(
+          "drag-over"
+        );
+
+        placePiece(slot);
+
+      }
+    );
+
+
+    /*
+      Phone touch
+    */
+
+    slot.addEventListener(
+      "pointerup",
+      () => {
+
+        placePiece(slot);
+
+      }
+    );
 
   }
 
@@ -287,78 +1019,126 @@ function createPuzzlePieces(){
 
   placedPieces = 0;
 
+
   puzzleMessage.textContent =
     "Start with any piece 🐷";
 
 
   /*
-    Numbers 0-8 represent the
-    correct positions.
+    Numbers 0-8 represent
+    the correct positions.
   */
 
-  const pieces = [...Array(9).keys()];
+  const pieces =
+    [...Array(9).keys()];
 
 
-  /* Shuffle pieces */
+  /*
+    Shuffle pieces.
+  */
 
-  pieces.sort(() => Math.random() - 0.5);
-
-
-  pieces.forEach(pieceNumber => {
-
-    const piece = document.createElement("div");
-
-    piece.className = "puzzle-piece";
-
-    piece.dataset.piece = pieceNumber;
-
-    piece.draggable = true;
+  pieces.sort(
+    () => Math.random() - 0.5
+  );
 
 
-    /*
-      Show the correct part
-      of the photo.
-    */
-
-    const column = pieceNumber % 3;
-    const row = Math.floor(pieceNumber / 3);
-
-    piece.style.backgroundPosition =
-      `${column * 50}% ${row * 50}%`;
+  pieces.forEach(
+    pieceNumber => {
 
 
-    /* Desktop drag */
-
-    piece.addEventListener("dragstart", ()=>{
-
-      draggedPiece = piece;
-
-      piece.classList.add("dragging");
-
-    });
+      const piece =
+        document.createElement(
+          "div"
+        );
 
 
-    piece.addEventListener("dragend", ()=>{
-
-      piece.classList.remove("dragging");
-
-    });
+      piece.className =
+        "puzzle-piece";
 
 
-    /* Touch */
-
-    piece.addEventListener("pointerdown", ()=>{
-
-      draggedPiece = piece;
-
-      piece.classList.add("dragging");
-
-    });
+      piece.dataset.piece =
+        pieceNumber;
 
 
-    puzzlePieces.appendChild(piece);
+      piece.draggable =
+        true;
 
-  });
+
+      /*
+        Show the correct part
+        of the photo.
+      */
+
+      const column =
+        pieceNumber % 3;
+
+
+      const row =
+        Math.floor(
+          pieceNumber / 3
+        );
+
+
+      piece.style.backgroundPosition =
+        `${column * 50}% ${row * 50}%`;
+
+
+      /*
+        Desktop drag
+      */
+
+      piece.addEventListener(
+        "dragstart",
+        () => {
+
+          draggedPiece =
+            piece;
+
+          piece.classList.add(
+            "dragging"
+          );
+
+        }
+      );
+
+
+      piece.addEventListener(
+        "dragend",
+        () => {
+
+          piece.classList.remove(
+            "dragging"
+          );
+
+        }
+      );
+
+
+      /*
+        Touch
+      */
+
+      piece.addEventListener(
+        "pointerdown",
+        () => {
+
+          draggedPiece =
+            piece;
+
+          piece.classList.add(
+            "dragging"
+          );
+
+        }
+      );
+
+
+      puzzlePieces.appendChild(
+        piece
+      );
+
+    }
+  );
 
 }
 
@@ -367,79 +1147,128 @@ function createPuzzlePieces(){
 
 function placePiece(slot){
 
-  if(!draggedPiece) return;
+  if(!draggedPiece)
+    return;
 
-  if(slot.classList.contains("correct")){
+
+  if(
+    slot.classList.contains(
+      "correct"
+    )
+  ){
 
     puzzleMessage.textContent =
       "That place is already taken 😌🐷";
 
     return;
+
   }
 
 
   const pieceNumber =
-    Number(draggedPiece.dataset.piece);
+    Number(
+      draggedPiece.dataset.piece
+    );
+
 
   const targetPosition =
-    Number(slot.dataset.position);
+    Number(
+      slot.dataset.position
+    );
 
 
-  /* Correct position */
+  /*
+    Correct position
+  */
 
-  if(pieceNumber === targetPosition){
+  if(
+    pieceNumber === targetPosition
+  ){
 
-    slot.appendChild(draggedPiece);
+    slot.appendChild(
+      draggedPiece
+    );
 
-    slot.classList.add("correct");
 
-    draggedPiece.classList.remove("dragging");
+    slot.classList.add(
+      "correct"
+    );
 
-    draggedPiece.draggable = false;
 
-    draggedPiece.style.pointerEvents = "none";
+    draggedPiece.classList.remove(
+      "dragging"
+    );
+
+
+    draggedPiece.draggable =
+      false;
+
+
+    draggedPiece.style.pointerEvents =
+      "none";
+
 
     placedPieces++;
+
 
     puzzleMessage.textContent =
       `Niceee! ${placedPieces}/9 pieces placed 🐷✨`;
 
 
-    draggedPiece = null;
+    draggedPiece =
+      null;
 
 
-    /* Finished */
+    /*
+      Finished
+    */
 
-    if(placedPieces === 9){
+    if(
+      placedPieces === 9
+    ){
 
       puzzleMessage.textContent =
         "YOU DID IT!! 🎉🐷";
 
 
-      setTimeout(()=>{
+      setTimeout(
+        () => {
 
-        puzzleSolved.classList.remove("hidden");
+          puzzleSolved.classList.remove(
+            "hidden"
+          );
 
-        toast("Puzzle solved! 🎁🩷");
 
-      },500);
+          toast(
+            "Puzzle solved! 🎁🩷"
+          );
 
+        },
+        500
+      );
 
     }
 
   }
 
 
-  /* Wrong position */
+  /*
+    Wrong position
+  */
 
   else{
 
-    draggedPiece.classList.remove("dragging");
+    draggedPiece.classList.remove(
+      "dragging"
+    );
+
 
     puzzleMessage.textContent =
       "Nopeee 😂 Try another place! 🐷";
 
-    draggedPiece = null;
+
+    draggedPiece =
+      null;
 
   }
 
@@ -447,91 +1276,240 @@ function placePiece(slot){
 
 
 /* ---------- final surprise ---------- */
-const openVideoBtn = document.getElementById("openVideoBtn");
-const replaySurpriseBtn = document.getElementById("replaySurpriseBtn");
-const surpriseVideo = document.getElementById("surpriseVideo");
-const surpriseText = document.getElementById("surpriseText");
+
+const openVideoBtn =
+  document.getElementById(
+    "openVideoBtn"
+  );
+
+const replaySurpriseBtn =
+  document.getElementById(
+    "replaySurpriseBtn"
+  );
+
+const surpriseVideo =
+  document.getElementById(
+    "surpriseVideo"
+  );
+
+const surpriseText =
+  document.getElementById(
+    "surpriseText"
+  );
+
 
 /*
-  The old six PNG/CSS animation has been removed.
-  The new surprise uses the supplied video, converted to 1080x1920 (9:16).
-  muted + playsinline makes autoplay/replay much more reliable on iPhone/iPad.
+  The old six PNG/CSS animation
+  has been removed.
+
+  The new surprise uses the supplied
+  video, converted to 1080x1920 (9:16).
+
+  muted + playsinline makes autoplay/replay
+  much more reliable on iPhone/iPad.
 */
-let surpriseStarted = false;
+
+let surpriseStarted =
+  false;
+
 
 function resetSurpriseUI(){
-  replaySurpriseBtn.classList.add("hidden");
-  openVideoBtn.classList.add("hidden");
-  surpriseText.textContent = "Waittt... 🐽";
+
+  replaySurpriseBtn.classList.add(
+    "hidden"
+  );
+
+  openVideoBtn.classList.add(
+    "hidden"
+  );
+
+  surpriseText.textContent =
+    "Waittt... 🐽";
+
 }
+
 
 function playSurpriseAnimation(){
-  if(!surpriseVideo) return;
 
-  surpriseStarted = true;
+  if(!surpriseVideo)
+    return;
+
+
+  surpriseStarted =
+    true;
+
+
   resetSurpriseUI();
 
-  surpriseVideo.pause();
-  surpriseVideo.currentTime = 0;
 
-  const playPromise = surpriseVideo.play();
-  if(playPromise && typeof playPromise.catch === "function"){
+  surpriseVideo.pause();
+
+  surpriseVideo.currentTime =
+    0;
+
+
+  const playPromise =
+    surpriseVideo.play();
+
+
+  if(
+    playPromise &&
+    typeof playPromise.catch ===
+      "function"
+  ){
+
     playPromise.catch(() => {
-      // Some browsers may require one extra user tap before playback.
-      surpriseText.textContent = "Tap to play the surprise 🐽";
+
+      /*
+        Some browsers may require
+        one extra user tap before playback.
+      */
+
+      surpriseText.textContent =
+        "Tap to play the surprise 🐽";
+
     });
+
   }
+
 }
+
 
 if(surpriseVideo){
-  surpriseVideo.addEventListener("timeupdate", () => {
-    const t = surpriseVideo.currentTime;
 
-    if(t < 1.3){
-      surpriseText.textContent = "Waittt... 🐽";
-    }else if(t < 2.4){
-      surpriseText.textContent = "POP! 💥";
-    }else if(t < 4.2){
-      surpriseText.textContent = "Wait... 👀";
-    }else if(t < 7.0){
-      surpriseText.textContent = "Something is changing... ✨";
-    }else{
-      surpriseText.textContent = "❤️";
+  surpriseVideo.addEventListener(
+    "timeupdate",
+    () => {
+
+      const t =
+        surpriseVideo.currentTime;
+
+
+      if(t < 1.3){
+
+        surpriseText.textContent =
+          "Waittt... 🐽";
+
+      }
+
+      else if(t < 2.4){
+
+        surpriseText.textContent =
+          "POP! 💥";
+
+      }
+
+      else if(t < 4.2){
+
+        surpriseText.textContent =
+          "Wait... 👀";
+
+      }
+
+      else if(t < 7.0){
+
+        surpriseText.textContent =
+          "Something is changing... ✨";
+
+      }
+
+      else{
+
+        surpriseText.textContent =
+          "❤️";
+
+      }
+
     }
-  });
+  );
 
-  surpriseVideo.addEventListener("ended", () => {
-    surpriseText.textContent = "A little surprise, just for you ❤️";
-    replaySurpriseBtn.classList.remove("hidden");
-    openVideoBtn.classList.remove("hidden");
-  });
 
-  surpriseVideo.addEventListener("error", () => {
-    surpriseText.textContent = "The surprise animation could not be loaded 😭";
-  });
+  surpriseVideo.addEventListener(
+    "ended",
+    () => {
+
+      surpriseText.textContent =
+        "A little surprise, just for you ❤️";
+
+
+      replaySurpriseBtn.classList.remove(
+        "hidden"
+      );
+
+
+      openVideoBtn.classList.remove(
+        "hidden"
+      );
+
+    }
+  );
+
+
+  surpriseVideo.addEventListener(
+    "error",
+    () => {
+
+      surpriseText.textContent =
+        "The surprise animation could not be loaded 😭";
+
+    }
+  );
+
 }
 
+
+/* ---------- surprise button ---------- */
+
 surpriseBtn.onclick = () => {
+
   show("surpriseScreen");
+
   playSurpriseAnimation();
+
 };
+
+
+/* ---------- replay surprise ---------- */
 
 replaySurpriseBtn.onclick = () => {
+
   playSurpriseAnimation();
+
 };
 
+
+/* ---------- open final birthday video ---------- */
+
 openVideoBtn.onclick = () => {
-  if(surpriseVideo) surpriseVideo.pause();
+
+  if(surpriseVideo)
+    surpriseVideo.pause();
+
+
   show("videoScreen");
-  const video = document.getElementById("birthdayVideo");
-  video.play().catch(() => {});
+
+
+  const video =
+    document.getElementById(
+      "birthdayVideo"
+    );
+
+
+  video.play().catch(
+    () => {}
+  );
+
 };
+
 
 /* ---------- start puzzle ---------- */
 
 function initPuzzle(){
 
-  puzzleSolved.classList.add("hidden");
+  puzzleSolved.classList.add(
+    "hidden"
+  );
+
 
   createPuzzleBoard();
 
@@ -540,7 +1518,6 @@ function initPuzzle(){
 }
 
 
-
-/* Start once */
+/* ---------- start once ---------- */
 
 initPuzzle();
