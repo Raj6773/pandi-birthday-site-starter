@@ -68,6 +68,22 @@ label{display:block;font-weight:700;margin-bottom:9px}
 .scene-decor span,.floating-decor span{position:absolute;opacity:.75}
 .b1{left:8%;top:18%;animation:float 3s infinite}.b2{right:8%;top:24%;animation:float 4s infinite .4s}.b3{left:13%;bottom:18%;animation:float 3.4s infinite .7s}.b4{right:15%;bottom:24%;animation:float 2.8s infinite 1s}
 .floating-decor span:nth-child(1){left:5%;top:8%}.floating-decor span:nth-child(2){right:7%;top:14%}.floating-decor span:nth-child(3){left:9%;bottom:12%}.floating-decor span:nth-child(4){right:13%;bottom:10%}.floating-decor span:nth-child(5){right:45%;top:5%}
+.goodbye-gifs{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-top:14px;
+}
+
+.goodbye-gifs img{
+  width:92px;
+  height:92px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 8px 12px rgba(180,70,115,.15));
+}
+
 .placeholder-sticker,.placeholder-strip{border:2px dashed #eaa6c1;background:rgba(255,255,255,.55);color:#bd718f;border-radius:18px;padding:10px;font-size:.72rem;font-weight:800;letter-spacing:.05em}
 .corner-sticker{position:absolute;right:16px;top:18px;width:90px}
 .party-stage{width:min(100%,560px);min-height:340px;border-radius:34px;background:linear-gradient(#fff,#ffe6ef);box-shadow:var(--shadow);position:relative;padding:25px;display:grid;align-content:center;justify-items:center;margin:14px auto 18px;overflow:hidden}

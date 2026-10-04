@@ -690,7 +690,7 @@ document.getElementById(
 
     }
 
-  }
+}      
 
   );
 
@@ -1418,7 +1418,7 @@ if(surpriseVideo){
       else{
 
         surpriseText.textContent =
-          "❤️";
+          "";
 
       }
 
@@ -1430,8 +1430,15 @@ if(surpriseVideo){
     "ended",
     () => {
 
+      /*
+        Intentionally blank.
+        The old:
+        "A little surprise, just for you ❤️"
+        has been removed.
+      */
+
       surpriseText.textContent =
-        "A little surprise, just for you ❤️";
+        "";
 
 
       replaySurpriseBtn.classList.remove(
@@ -1464,6 +1471,7 @@ if(surpriseVideo){
 
 const surpriseBtn =
   document.getElementById("surpriseBtn");
+
 surpriseBtn.onclick = () => {
 
   show("surpriseScreen");
