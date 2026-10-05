@@ -262,6 +262,127 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 
 
 /* =========================
+   PUZZLE PAGE DECORATIVE GIFS
+   ========================= */
+
+#puzzleScreen{
+  position:relative;
+  isolation:isolate;
+}
+
+/* Puzzle GIFs should frame the page just like the DOB screen:
+   left + right sides, outside the white puzzle card. */
+.puzzle-gif-decor{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.puzzle-gif-decor .puzzle-gif{
+  position:absolute;
+  width:108px;
+  height:108px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 9px 16px rgba(180,70,115,.18));
+  user-select:none;
+  -webkit-user-drag:none;
+  animation:puzzleGifFloat 3.8s ease-in-out infinite;
+}
+
+/* Six clean positions around the central content */
+.puzzle-gif-decor .pg1{
+  left:2.5%;
+  top:9%;
+}
+
+.puzzle-gif-decor .pg2{
+  right:2.5%;
+  top:9%;
+  animation-delay:-.7s;
+}
+
+.puzzle-gif-decor .pg3{
+  left:2%;
+  top:42%;
+  animation-delay:-1.4s;
+}
+
+.puzzle-gif-decor .pg4{
+  right:2%;
+  top:42%;
+  animation-delay:-2.1s;
+}
+
+.puzzle-gif-decor .pg5{
+  left:4%;
+  bottom:7%;
+  animation-delay:-2.8s;
+}
+
+.puzzle-gif-decor .pg6{
+  right:4%;
+  bottom:7%;
+  animation-delay:-3.5s;
+}
+
+/* Keep all puzzle content above the decorative GIFs. */
+#puzzleScreen > h2,
+#puzzleScreen > .subtitle,
+#puzzleScreen > .puzzle-card,
+#puzzleScreen > .success-box{
+  position:relative;
+  z-index:2;
+}
+
+@keyframes puzzleGifFloat{
+  0%,100%{
+    transform:translate3d(0,0,0) rotate(-2deg);
+  }
+  50%{
+    transform:translate3d(0,-12px,0) rotate(2deg);
+  }
+}
+
+/* Tablet / phone */
+@media(max-width:900px){
+  .puzzle-gif-decor .puzzle-gif{
+    width:82px;
+    height:82px;
+  }
+
+  .puzzle-gif-decor .pg1{left:1%;top:8%}
+  .puzzle-gif-decor .pg2{right:1%;top:8%}
+  .puzzle-gif-decor .pg3{left:0;top:40%}
+  .puzzle-gif-decor .pg4{right:0;top:40%}
+  .puzzle-gif-decor .pg5{left:1%;bottom:4%}
+  .puzzle-gif-decor .pg6{right:1%;bottom:4%}
+}
+
+@media(max-width:600px){
+  .puzzle-gif-decor .puzzle-gif{
+    width:68px;
+    height:68px;
+  }
+
+  .puzzle-gif-decor .pg1{left:-2px;top:7%}
+  .puzzle-gif-decor .pg2{right:-2px;top:7%}
+  .puzzle-gif-decor .pg3{left:-3px;top:38%}
+  .puzzle-gif-decor .pg4{right:-3px;top:38%}
+  .puzzle-gif-decor .pg5{left:-2px;bottom:3%}
+  .puzzle-gif-decor .pg6{right:-2px;bottom:3%}
+}
+
+@media(max-width:420px){
+  .puzzle-gif-decor .puzzle-gif{
+    width:58px;
+    height:58px;
+  }
+}
+
+/* =========================
    REAL GIF REACTIONS
    ========================= */
 
@@ -1631,5 +1752,133 @@ video{display:block;width:100%;max-height:70svh;background:#111}
   .party-pigs img{
     width:72px;
     height:72px;
+  }
+}
+
+
+/* =========================================================
+   PUZZLE GIF FRAME - FINAL POSITION OVERRIDE
+   Force 3 GIFs on LEFT + 3 GIFs on RIGHT.
+   This block intentionally comes last so nothing overrides it.
+   ========================================================= */
+
+#puzzleScreen .puzzle-gif-decor{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100vh !important;
+  z-index:1 !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+}
+
+#puzzleScreen .puzzle-gif-decor .puzzle-gif{
+  position:absolute !important;
+  width:105px !important;
+  height:105px !important;
+  object-fit:contain !important;
+  display:block !important;
+  z-index:1 !important;
+  animation:puzzleGifFloat 3.8s ease-in-out infinite !important;
+}
+
+/* LEFT */
+#puzzleScreen .puzzle-gif-decor img.pg1{
+  left:3% !important;
+  right:auto !important;
+  top:9% !important;
+  bottom:auto !important;
+}
+
+#puzzleScreen .puzzle-gif-decor img.pg3{
+  left:3% !important;
+  right:auto !important;
+  top:43% !important;
+  bottom:auto !important;
+}
+
+#puzzleScreen .puzzle-gif-decor img.pg5{
+  left:3% !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:7% !important;
+}
+
+/* RIGHT */
+#puzzleScreen .puzzle-gif-decor img.pg2{
+  left:auto !important;
+  right:3% !important;
+  top:9% !important;
+  bottom:auto !important;
+  animation-delay:-.7s !important;
+}
+
+#puzzleScreen .puzzle-gif-decor img.pg4{
+  left:auto !important;
+  right:3% !important;
+  top:43% !important;
+  bottom:auto !important;
+  animation-delay:-2.1s !important;
+}
+
+#puzzleScreen .puzzle-gif-decor img.pg6{
+  left:auto !important;
+  right:3% !important;
+  top:auto !important;
+  bottom:7% !important;
+  animation-delay:-3.5s !important;
+}
+
+/* Keep the puzzle itself clearly in front */
+#puzzleScreen > h2,
+#puzzleScreen > .subtitle,
+#puzzleScreen > .puzzle-card,
+#puzzleScreen > .success-box{
+  position:relative !important;
+  z-index:5 !important;
+}
+
+/* Responsive */
+@media(max-width:900px){
+  #puzzleScreen .puzzle-gif-decor .puzzle-gif{
+    width:78px !important;
+    height:78px !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg1{
+    left:1% !important;
+    top:8% !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg2{
+    right:1% !important;
+    top:8% !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg3{
+    left:1% !important;
+    top:43% !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg4{
+    right:1% !important;
+    top:43% !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg5{
+    left:1% !important;
+    bottom:4% !important;
+  }
+
+  #puzzleScreen .puzzle-gif-decor img.pg6{
+    right:1% !important;
+    bottom:4% !important;
+  }
+}
+
+@media(max-width:600px){
+  #puzzleScreen .puzzle-gif-decor .puzzle-gif{
+    width:62px !important;
+    height:62px !important;
   }
 }
