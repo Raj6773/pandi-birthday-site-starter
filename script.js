@@ -866,6 +866,19 @@ celebrateBtn.onclick = () => {
   startCelebration();
 
 
+  /* Smoothly bring the newly revealed next step into view.
+     The celebration section is taller on phones, so without
+     this the Continue to Gift button can remain below the fold. */
+  setTimeout(() => {
+
+    afterCelebrate.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+  }, 180);
+
+
   toast(
     "PARTYYYY! 🎉🐷🎈"
   );
@@ -996,10 +1009,17 @@ function createPuzzleBoard(){
 
 
     /*
-      Phone touch placement is handled globally
-      so the user can drag immediately without
-      a long press.
+      Phone touch
     */
+
+    slot.addEventListener(
+      "pointerup",
+      () => {
+
+        placePiece(slot);
+
+      }
+    );
 
   }
 
@@ -1110,27 +1130,21 @@ function createPuzzlePieces(){
 
 
       /*
-        Phone / tablet touch drag
-        Starts immediately on touch.
-        No long-press / 3-4 second delay.
+        Touch
       */
 
       piece.addEventListener(
         "pointerdown",
-        (e) => {
+        () => {
 
-          if(e.pointerType === "mouse")
-            return;
+          draggedPiece =
+            piece;
 
-          e.preventDefault();
-
-          startTouchPuzzleDrag(
-            piece,
-            e
+          piece.classList.add(
+            "dragging"
           );
 
-        },
-        {passive:false}
+        }
       );
 
 
@@ -1140,210 +1154,6 @@ function createPuzzlePieces(){
 
     }
   );
-
-}
-
-
-/* ---------- fast mobile touch drag ---------- */
-
-let touchPuzzleDrag = null;
-
-function startTouchPuzzleDrag(piece, event){
-
-  if(touchPuzzleDrag)
-    finishTouchPuzzleDrag();
-
-  draggedPiece = piece;
-
-  const rect =
-    piece.getBoundingClientRect();
-
-  /*
-    Create a lightweight copy that follows
-    the finger immediately. The real piece stays
-    in the tray until the user releases it.
-  */
-  const ghost =
-    piece.cloneNode(true);
-
-  ghost.classList.add(
-    "puzzle-touch-ghost"
-  );
-
-  ghost.classList.remove(
-    "dragging"
-  );
-
-  ghost.style.position = "fixed";
-  ghost.style.left = `${rect.left}px`;
-  ghost.style.top = `${rect.top}px`;
-  ghost.style.width = `${rect.width}px`;
-  ghost.style.height = `${rect.height}px`;
-  ghost.style.margin = "0";
-  ghost.style.zIndex = "10000";
-  ghost.style.pointerEvents = "none";
-  ghost.style.opacity = "0.92";
-  ghost.style.transform = "scale(1.06)";
-
-  document.body.appendChild(
-    ghost
-  );
-
-  piece.classList.add(
-    "dragging"
-  );
-
-  touchPuzzleDrag = {
-    piece,
-    ghost,
-    pointerId: event.pointerId,
-    offsetX: rect.width / 2,
-    offsetY: rect.height / 2
-  };
-
-  moveTouchPuzzleDrag(event);
-
-  window.addEventListener(
-    "pointermove",
-    moveTouchPuzzleDrag,
-    {passive:false}
-  );
-
-  window.addEventListener(
-    "pointerup",
-    finishTouchPuzzleDrag,
-    {passive:false}
-  );
-
-  window.addEventListener(
-    "pointercancel",
-    finishTouchPuzzleDrag,
-    {passive:false}
-  );
-}
-
-
-function moveTouchPuzzleDrag(event){
-
-  if(!touchPuzzleDrag)
-    return;
-
-  if(
-    event.pointerId !==
-    touchPuzzleDrag.pointerId
-  )
-    return;
-
-  event.preventDefault();
-
-  const x =
-    event.clientX -
-    touchPuzzleDrag.offsetX;
-
-  const y =
-    event.clientY -
-    touchPuzzleDrag.offsetY;
-
-  touchPuzzleDrag.ghost.style.left =
-    `${x}px`;
-
-  touchPuzzleDrag.ghost.style.top =
-    `${y}px`;
-}
-
-
-function finishTouchPuzzleDrag(event){
-
-  if(!touchPuzzleDrag)
-    return;
-
-  if(
-    event &&
-    event.pointerId !==
-    touchPuzzleDrag.pointerId
-  )
-    return;
-
-  if(event)
-    event.preventDefault();
-
-  const currentDrag =
-    touchPuzzleDrag;
-
-  /*
-    Remove listeners first so the next touch
-    starts completely clean.
-  */
-  window.removeEventListener(
-    "pointermove",
-    moveTouchPuzzleDrag
-  );
-
-  window.removeEventListener(
-    "pointerup",
-    finishTouchPuzzleDrag
-  );
-
-  window.removeEventListener(
-    "pointercancel",
-    finishTouchPuzzleDrag
-  );
-
-  touchPuzzleDrag = null;
-
-  if(
-    currentDrag.ghost &&
-    currentDrag.ghost.parentNode
-  ){
-
-    currentDrag.ghost.remove();
-
-  }
-
-  /*
-    pointercancel means the browser interrupted
-    the gesture, so simply reset the piece.
-  */
-  if(!event || event.type === "pointercancel"){
-
-    currentDrag.piece.classList.remove(
-      "dragging"
-    );
-
-    draggedPiece = null;
-
-    return;
-
-  }
-
-  /*
-    Find the puzzle slot directly underneath
-    the finger at release.
-  */
-  const target =
-    document.elementFromPoint(
-      event.clientX,
-      event.clientY
-    );
-
-  const slot =
-    target &&
-    target.closest(".puzzle-slot");
-
-  if(slot){
-
-    placePiece(slot);
-
-  }
-  else{
-
-    currentDrag.piece.classList.remove(
-      "dragging"
-    );
-
-    draggedPiece = null;
-
-  }
 
 }
 
