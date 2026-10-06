@@ -1,0 +1,16 @@
+{
+  "name": "Happy Birthday Pandi 🐷",
+  "short_name": "Pandi 🐷",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff8fb",
+  "theme_color": "#ffd6e7",
+  "icons": [
+    {
+      "src": "assets/photos/puzzle-photo-removebg-preview.png?v=20261006-logo",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
