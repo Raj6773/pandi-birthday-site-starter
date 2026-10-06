@@ -1130,22 +1130,113 @@ function createPuzzlePieces(){
 
 
       /*
-        Touch
+        Mobile / touch drag
+        Start immediately — NO long press.
       */
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchPointerId = null;
 
       piece.addEventListener(
         "pointerdown",
-        () => {
+        (e) => {
 
-          draggedPiece =
-            piece;
+          if(e.pointerType === "mouse")
+            return;
 
-          piece.classList.add(
-            "dragging"
+          e.preventDefault();
+
+          draggedPiece = piece;
+          touchPointerId = e.pointerId;
+          touchStartX = e.clientX;
+          touchStartY = e.clientY;
+
+          piece.classList.add("dragging");
+
+          if(piece.setPointerCapture){
+            try{
+              piece.setPointerCapture(e.pointerId);
+            }catch(err){}
+          }
+
+        },
+        {passive:false}
+      );
+
+      piece.addEventListener(
+        "pointermove",
+        (e) => {
+
+          if(touchPointerId !== e.pointerId || draggedPiece !== piece)
+            return;
+
+          e.preventDefault();
+
+          const dx = e.clientX - touchStartX;
+          const dy = e.clientY - touchStartY;
+
+          piece.style.transform =
+            `translate3d(${dx}px, ${dy}px, 0) scale(1.04)`;
+
+          document
+            .querySelectorAll(".puzzle-slot.drag-over")
+            .forEach(slot => slot.classList.remove("drag-over"));
+
+          const underFinger =
+            document.elementsFromPoint(e.clientX, e.clientY);
+
+          const slot = underFinger.find(
+            el => el.classList && el.classList.contains("puzzle-slot")
           );
 
-        }
+          if(slot && !slot.classList.contains("correct")){
+            slot.classList.add("drag-over");
+          }
+
+        },
+        {passive:false}
       );
+
+      const finishTouchDrag = (e) => {
+
+        if(touchPointerId !== e.pointerId || draggedPiece !== piece)
+          return;
+
+        e.preventDefault();
+
+        document
+          .querySelectorAll(".puzzle-slot.drag-over")
+          .forEach(slot => slot.classList.remove("drag-over"));
+
+        const underFinger =
+          document.elementsFromPoint(e.clientX, e.clientY);
+
+        const slot = underFinger.find(
+          el => el.classList && el.classList.contains("puzzle-slot")
+        );
+
+        piece.style.transform = "";
+        piece.classList.remove("dragging");
+
+        if(slot){
+          placePiece(slot);
+        }else{
+          draggedPiece = null;
+        }
+
+        touchPointerId = null;
+
+        if(piece.releasePointerCapture){
+          try{
+            piece.releasePointerCapture(e.pointerId);
+          }catch(err){}
+        }
+
+      };
+
+      piece.addEventListener("pointerup", finishTouchDrag, {passive:false});
+      piece.addEventListener("pointercancel", finishTouchDrag, {passive:false});
 
 
       puzzlePieces.appendChild(
@@ -1174,6 +1265,10 @@ function placePiece(slot){
 
     puzzleMessage.textContent =
       "That place is already taken 😌🐷";
+
+    draggedPiece.style.transform = "";
+    draggedPiece.classList.remove("dragging");
+    draggedPiece = null;
 
     return;
 
@@ -1214,6 +1309,7 @@ function placePiece(slot){
       "dragging"
     );
 
+    draggedPiece.style.transform = "";
 
     draggedPiece.draggable =
       false;
@@ -1277,6 +1373,7 @@ function placePiece(slot){
       "dragging"
     );
 
+    draggedPiece.style.transform = "";
 
     puzzleMessage.textContent =
       "Nopeee 😂 Try another place! 🐷";
