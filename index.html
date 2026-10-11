@@ -13,9 +13,20 @@
   <meta name="apple-mobile-web-app-title" content="Happy Birthday Pandi 🐷">
   <meta name="application-name" content="Happy Birthday Pandi 🐷">
 
-  <link rel="stylesheet" href="style.css?v=20261006-logo">
+  <link rel="stylesheet" href="style.css?v=20261011-loader2">
 </head>
 <body>
+  <!-- Initial loading screen: uses the real pig GIF, not a CSS-drawn character. -->
+  <div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-label="Loading birthday surprise">
+    <div class="loader-card">
+      <img class="loader-pig" src="assets/gifs/sittingpig.gif" alt="">
+      <h2>Getting Pandi's surprise ready 🐷</h2>
+      <p id="loaderMessage">Waking up the little pigs...</p>
+      <div class="loader-track" aria-hidden="true"><span id="loaderProgress"></span></div>
+      <span id="loaderPercent" class="loader-percent">0%</span>
+    </div>
+  </div>
+
   <main id="app">
     <!-- 1. Birthday check -->
     <section class="screen active" id="birthdayScreen">
@@ -290,6 +301,6 @@
   <div id="celebrationFx" class="celebration-fx" aria-hidden="true"></div>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="script.js"></script>
+  <script src="script.js?v=20261011-loader2"></script>
 </body>
 </html>

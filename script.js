@@ -33,6 +33,120 @@ const REACTION_GIFS = {
 };
 
 
+/* ---------- intelligent, progressive asset loading ---------- */
+
+// Only the first screen is prepared before the loader disappears.
+// Later-screen images are fetched in the background when that screen is opened.
+const SCREEN_ASSETS = {
+  readyScreen: [
+    "assets/gifs/AreYouReady/Girl_dancing_2.gif",
+    "assets/gifs/AreYouReady/amazing.gif",
+    "assets/gifs/AreYouReady/cool_girl.gif",
+    "assets/gifs/AreYouReady/excited.gif",
+    "assets/gifs/AreYouReady/happy-girl.gif",
+    "assets/gifs/AreYouReady/suprize-girl.gif",
+    "assets/gifs/AreYouReady/thinking.gif"
+  ],
+  celebrateScreen: [
+    "assets/gifs/HappyBirthday/Girl_dancing_3.gif",
+    "assets/gifs/HappyBirthday/cutepig.gif",
+    "assets/gifs/HappyBirthday/Girl_dancing_1.gif",
+    "assets/gifs/HappyBirthday/kingpig.gif",
+    "assets/gifs/dancingpig.gif",
+    "assets/gifs/cakepig.gif",
+    "assets/gifs/Crawlingdancepig.gif"
+  ],
+  puzzleScreen: [
+    "assets/gifs/Puzzle/smart_girl.gif",
+    "assets/gifs/Puzzle/suprize-girl.gif",
+    "assets/gifs/Puzzle/thinking.gif",
+    "assets/gifs/Puzzle/cool_girl.gif",
+    "assets/gifs/Puzzle/playing_girl.gif",
+    "assets/gifs/Puzzle/Thinkin_girl.gif",
+    "assets/photos/puzzle-photo.png"
+  ],
+  surpriseScreen: [],
+  videoScreen: [
+    "assets/gifs/byee/excited.gif",
+    "assets/gifs/byee/laughpig.gif"
+  ]
+};
+
+const preloadedAssets = new Set();
+
+function preloadImage(src) {
+  if (preloadedAssets.has(src)) return Promise.resolve();
+  preloadedAssets.add(src);
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => resolve(); // Missing optional art must never block the site.
+    img.src = src;
+    if (img.complete) resolve();
+  });
+}
+
+function preloadScreenAssets(screenId) {
+  const assets = SCREEN_ASSETS[screenId] || [];
+  // Schedule in the background so navigation and button clicks never wait.
+  assets.forEach(src => { preloadImage(src); });
+}
+
+async function prepareFirstScreen() {
+  const loader = document.getElementById("siteLoader");
+  const progress = document.getElementById("loaderProgress");
+  const percent = document.getElementById("loaderPercent");
+  const message = document.getElementById("loaderMessage");
+
+  const firstScreenAssets = [
+    "assets/gifs/sittingpig.gif",
+    "assets/gifs/DateofBirth/what.gif",
+    "assets/gifs/DateofBirth/excited.gif",
+    "assets/gifs/DateofBirth/happy-girl.gif",
+    "assets/gifs/DateofBirth/suprize-girl.gif",
+    "assets/gifs/DateofBirth/heart_img.gif",
+    "assets/gifs/DateofBirth/hii.gif"
+  ];
+
+  if (!loader) return;
+
+  let finished = 0;
+  const update = () => {
+    const value = Math.round((finished / firstScreenAssets.length) * 100);
+    if (progress) progress.style.width = value + "%";
+    if (percent) percent.textContent = value + "%";
+    if (message) {
+      message.textContent = value < 40
+        ? "Waking up the little pigs..."
+        : value < 85
+          ? "Getting the pink world ready..."
+          : "Almost ready, Pandi! 🩷";
+    }
+  };
+
+  // Fail open after 5 seconds on slow networks or missing GIFs.
+  const safetyTimer = setTimeout(() => finishLoader(), 5000);
+  let loaderFinished = false;
+
+  function finishLoader() {
+    if (loaderFinished) return;
+    loaderFinished = true;
+    clearTimeout(safetyTimer);
+    if (progress) progress.style.width = "100%";
+    if (percent) percent.textContent = "100%";
+    loader.classList.add("loader-done");
+    setTimeout(() => loader.remove(), 450);
+  }
+
+  await Promise.all(firstScreenAssets.map(src =>
+    preloadImage(src).then(() => {
+      finished++;
+      update();
+    })
+  ));
+  finishLoader();
+}
+
 /* ---------- page navigation ---------- */
 
 const screens = [...document.querySelectorAll(".screen")];
@@ -41,6 +155,8 @@ function show(id){
   screens.forEach(s =>
     s.classList.toggle("active", s.id === id)
   );
+
+  preloadScreenAssets(id);
 
   window.scrollTo({
     top: 0,
@@ -891,6 +1007,9 @@ document.getElementById(
 ).onclick = () => {
 
   initPuzzle();
+
+// Start preparing the opening screen after the page's handlers are registered.
+prepareFirstScreen();
 
   show("puzzleScreen");
 
