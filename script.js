@@ -1008,9 +1008,6 @@ document.getElementById(
 
   initPuzzle();
 
-// Start preparing the opening screen after the page's handlers are registered.
-prepareFirstScreen();
-
   show("puzzleScreen");
 
 };
@@ -1762,3 +1759,6 @@ function initPuzzle(){
 /* ---------- start once ---------- */
 
 initPuzzle();
+
+// Start the initial loader on page load, after all elements and handlers exist.
+prepareFirstScreen();
