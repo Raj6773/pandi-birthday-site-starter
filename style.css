@@ -2077,3 +2077,88 @@ video{display:block;width:100%;max-height:70svh;background:#111}
   position: relative;
   z-index: 160 !important;
 }
+
+
+/* PUZZLE RESTORE: visual-only override.
+   Keep the established 9-piece drag code untouched.
+   GIF layer must outrank the card; the earlier z-index:1!important
+   was the reason these GIFs were hidden behind the white card. */
+#puzzleScreen .puzzle-gif-decor {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 6 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+}
+#puzzleScreen .puzzle-gif-decor .puzzle-gif {
+  z-index: 7 !important;
+  pointer-events: none !important;
+}
+#puzzleScreen > h2,
+#puzzleScreen > .subtitle,
+#puzzleScreen > .puzzle-card,
+#puzzleScreen > .success-box {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+/* Keep the board and all nine loose pieces visible together on phones. */
+@media (max-width: 600px) {
+  #puzzleScreen {
+    padding: max(8px, env(safe-area-inset-top)) 10px max(8px, env(safe-area-inset-bottom)) !important;
+    align-content: start !important;
+    row-gap: 2px !important;
+  }
+  #puzzleScreen > h2 {
+    font-size: clamp(1.25rem, 5.6vw, 1.8rem) !important;
+    line-height: 1.12 !important;
+    margin: 0 0 3px !important;
+  }
+  #puzzleScreen > .subtitle {
+    font-size: .88rem !important;
+    line-height: 1.2 !important;
+    margin: 0 0 2px !important;
+  }
+  #puzzleScreen > .puzzle-card {
+    width: 100% !important;
+    max-width: 430px !important;
+    padding: 10px 10px 9px !important;
+    margin: 4px auto !important;
+    overflow: visible !important;
+  }
+  #puzzleScreen .puzzle-instruction {
+    font-size: .86rem !important;
+    line-height: 1.2 !important;
+    margin: 0 0 7px !important;
+  }
+  #puzzleScreen .puzzle-board {
+    width: min(82vw, 29svh, 320px) !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+  }
+  #puzzleScreen .puzzle-message {
+    min-height: 0 !important;
+    margin: 6px 0 0 !important;
+    font-size: .8rem !important;
+    line-height: 1.15 !important;
+  }
+  #puzzleScreen .puzzle-pieces {
+    width: min(100%, 31svh, 340px) !important;
+    max-width: 340px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    margin: 7px auto 0 !important;
+  }
+  #puzzleScreen .puzzle-pieces .puzzle-piece {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+  #puzzleScreen .puzzle-gif-decor .puzzle-gif {
+    width: clamp(42px, 12vw, 62px) !important;
+    height: clamp(42px, 12vw, 62px) !important;
+  }
+}
