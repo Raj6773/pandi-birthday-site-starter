@@ -86,8 +86,8 @@ function preloadImage(src) {
       clearTimeout(fallbackTimer);
       resolve();
     };
-    // Never let one broken/slow optional image keep the loader forever.
-    const fallbackTimer = setTimeout(finish, 12000);
+    // A missing or slow optional image must never freeze navigation.
+    const fallbackTimer = setTimeout(finish, 8000);
     img.onload = finish;
     img.onerror = finish;
     img.src = src;
@@ -100,8 +100,22 @@ function preloadImage(src) {
 
 function preloadScreenAssets(screenId) {
   const assets = SCREEN_ASSETS[screenId] || [];
-  // Schedule in the background so navigation and button clicks never wait.
+  // Preload only the destination page; never download all later pages at startup.
   assets.forEach(src => { preloadImage(src); });
+}
+
+function activateImagesIn(container) {
+  if (!container) return;
+  container.querySelectorAll("img[data-src]").forEach(img => {
+    if (!img.getAttribute("src")) {
+      img.setAttribute("src", img.getAttribute("data-src"));
+      img.removeAttribute("data-src");
+    }
+  });
+}
+
+function activateScreenImages(screenId) {
+  activateImagesIn(document.getElementById(screenId));
 }
 
 async function prepareFirstScreen() {
@@ -111,83 +125,74 @@ async function prepareFirstScreen() {
   const message = document.getElementById("loaderMessage");
   if (!loader) return;
 
-  // Preload every image used across all screens, including hidden screens
-  // and the decorative GIFs that JavaScript swaps in later.
-  const htmlImages = [...document.querySelectorAll("img[src]")]
-    .map(img => img.getAttribute("src"))
-    .filter(Boolean);
-
-  const dynamicGifAssets = [
-    ...REACTION_GIFS.wrongBirthday.map(file => `assets/gifs/${file}`),
-    ...REACTION_GIFS.no.map(file => `assets/gifs/${file}`),
-    ...REACTION_GIFS.sorry.map(file => `assets/gifs/${file}`),
-    ...NO_DECOR_GIFS.map(file => `assets/gifs/${file}`),
-    ...SORRY_DECOR_GIFS.map(file => `assets/gifs/${file}`)
+  const firstScreenAssets = [
+    "assets/gifs/sittingpig.gif",
+    "assets/gifs/DateofBirth/what.gif",
+    "assets/gifs/DateofBirth/excited.gif",
+    "assets/gifs/DateofBirth/happy-girl.gif",
+    "assets/gifs/DateofBirth/suprize-girl.gif",
+    "assets/gifs/DateofBirth/heart_img.gif",
+    "assets/gifs/DateofBirth/hii.gif"
   ];
 
-  const allAssets = [...new Set([
-    ...htmlImages,
-    ...Object.values(SCREEN_ASSETS).flat(),
-    ...dynamicGifAssets
-  ])];
-
   let finished = 0;
+  let loaderFinished = false;
   const update = () => {
-    const value = Math.round((finished / allAssets.length) * 100);
+    const value = Math.round((finished / firstScreenAssets.length) * 100);
     if (progress) progress.style.width = value + "%";
     if (percent) percent.textContent = value + "%";
     if (message) {
-      message.textContent = value < 35
-        ? "Waking up all the little pigs..."
-        : value < 75
-          ? "Getting every page ready..."
-          : value < 100
-            ? "Almost ready, Pandi! 🩷"
-            : "All ready! Let’s go! 🐷";
+      message.textContent = value < 40
+        ? "Waking up the little pigs..."
+        : value < 85
+          ? "Getting the pink world ready..."
+          : "Almost ready, Pandi! 🩷";
     }
   };
 
-  await Promise.all(allAssets.map(src =>
+  function finishLoader() {
+    if (loaderFinished) return;
+    loaderFinished = true;
+    if (progress) progress.style.width = "100%";
+    if (percent) percent.textContent = "100%";
+    loader.classList.add("loader-done");
+    setTimeout(() => loader.remove(), 450);
+  }
+
+  // Keep the loader bounded; later pages are intentionally loaded on demand.
+  const safetyTimer = setTimeout(() => {
+    clearInterval(progressTimer);
+    finishLoader();
+  }, 5000);
+  const progressTimer = setInterval(() => {
+    if (loaderFinished) {
+      clearInterval(progressTimer);
+      clearTimeout(safetyTimer);
+    }
+  }, 250);
+
+  await Promise.all(firstScreenAssets.map(src =>
     preloadImage(src).then(() => {
       finished++;
       update();
     })
   ));
-
-  if (progress) progress.style.width = "100%";
-  if (percent) percent.textContent = "100%";
-  if (message) message.textContent = "All ready! Let’s go! 🐷";
-  loader.classList.add("loader-done");
-  setTimeout(() => loader.remove(), 450);
+  clearTimeout(safetyTimer);
+  clearInterval(progressTimer);
+  finishLoader();
 }
 
 /* ---------- page navigation ---------- */
 
 const screens = [...document.querySelectorAll(".screen")];
 
-function show(id){
-  screens.forEach(s =>
-    s.classList.toggle("active", s.id === id)
-  );
-
+function show(id) {
+  // Attach image URLs only when the destination page is actually requested.
+  activateScreenImages(id);
+  screens.forEach(s => s.classList.toggle("active", s.id === id));
   preloadScreenAssets(id);
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-function toast(msg){
-  const el = document.getElementById("toast");
-
-  el.textContent = msg;
-  el.classList.add("show");
-
-  setTimeout(() => {
-    el.classList.remove("show");
-  }, 1800);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 
@@ -432,6 +437,7 @@ function openReaction({
     wrongDobGifs.classList.remove(
       "hidden"
     );
+    activateImagesIn(wrongDobGifs);
 
     noReadyGifs.classList.add(
       "hidden"

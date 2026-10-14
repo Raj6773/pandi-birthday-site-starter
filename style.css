@@ -118,7 +118,6 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 @keyframes flicker{from{transform:scale(.9)}to{transform:scale(1.15) translateY(-2px)}}
 @keyframes pop{from{transform:scale(.92)}to{transform:scale(1.06)}}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (min-width:700px){
   .screen{padding-left:40px;padding-right:40px}
 }
@@ -606,7 +605,7 @@ video{display:block;width:100%;max-height:70svh;background:#111}
 .celebration-fx{
   position:fixed;
   inset:0;
-  z-index:90;
+  z-index:9999;
   pointer-events:none;
   overflow:hidden;
   display:none;
