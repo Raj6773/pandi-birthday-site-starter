@@ -72,18 +72,30 @@ const SCREEN_ASSETS = {
   ]
 };
 
-const preloadedAssets = new Set();
+const preloadedAssets = new Map();
 
 function preloadImage(src) {
-  if (preloadedAssets.has(src)) return Promise.resolve();
-  preloadedAssets.add(src);
-  return new Promise(resolve => {
+  if (preloadedAssets.has(src)) return preloadedAssets.get(src);
+
+  const promise = new Promise(resolve => {
     const img = new Image();
-    img.onload = () => resolve();
-    img.onerror = () => resolve(); // Missing optional art must never block the site.
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(fallbackTimer);
+      resolve();
+    };
+    // Never let one broken/slow optional image keep the loader forever.
+    const fallbackTimer = setTimeout(finish, 12000);
+    img.onload = finish;
+    img.onerror = finish;
     img.src = src;
-    if (img.complete) resolve();
+    if (img.complete) finish();
   });
+
+  preloadedAssets.set(src, promise);
+  return promise;
 }
 
 function preloadScreenAssets(screenId) {
@@ -97,54 +109,56 @@ async function prepareFirstScreen() {
   const progress = document.getElementById("loaderProgress");
   const percent = document.getElementById("loaderPercent");
   const message = document.getElementById("loaderMessage");
+  if (!loader) return;
 
-  const firstScreenAssets = [
-    "assets/gifs/sittingpig.gif",
-    "assets/gifs/DateofBirth/what.gif",
-    "assets/gifs/DateofBirth/excited.gif",
-    "assets/gifs/DateofBirth/happy-girl.gif",
-    "assets/gifs/DateofBirth/suprize-girl.gif",
-    "assets/gifs/DateofBirth/heart_img.gif",
-    "assets/gifs/DateofBirth/hii.gif"
+  // Preload every image used across all screens, including hidden screens
+  // and the decorative GIFs that JavaScript swaps in later.
+  const htmlImages = [...document.querySelectorAll("img[src]")]
+    .map(img => img.getAttribute("src"))
+    .filter(Boolean);
+
+  const dynamicGifAssets = [
+    ...REACTION_GIFS.wrongBirthday.map(file => `assets/gifs/${file}`),
+    ...REACTION_GIFS.no.map(file => `assets/gifs/${file}`),
+    ...REACTION_GIFS.sorry.map(file => `assets/gifs/${file}`),
+    ...NO_DECOR_GIFS.map(file => `assets/gifs/${file}`),
+    ...SORRY_DECOR_GIFS.map(file => `assets/gifs/${file}`)
   ];
 
-  if (!loader) return;
+  const allAssets = [...new Set([
+    ...htmlImages,
+    ...Object.values(SCREEN_ASSETS).flat(),
+    ...dynamicGifAssets
+  ])];
 
   let finished = 0;
   const update = () => {
-    const value = Math.round((finished / firstScreenAssets.length) * 100);
+    const value = Math.round((finished / allAssets.length) * 100);
     if (progress) progress.style.width = value + "%";
     if (percent) percent.textContent = value + "%";
     if (message) {
-      message.textContent = value < 40
-        ? "Waking up the little pigs..."
-        : value < 85
-          ? "Getting the pink world ready..."
-          : "Almost ready, Pandi! 🩷";
+      message.textContent = value < 35
+        ? "Waking up all the little pigs..."
+        : value < 75
+          ? "Getting every page ready..."
+          : value < 100
+            ? "Almost ready, Pandi! 🩷"
+            : "All ready! Let’s go! 🐷";
     }
   };
 
-  // Fail open after 5 seconds on slow networks or missing GIFs.
-  const safetyTimer = setTimeout(() => finishLoader(), 5000);
-  let loaderFinished = false;
-
-  function finishLoader() {
-    if (loaderFinished) return;
-    loaderFinished = true;
-    clearTimeout(safetyTimer);
-    if (progress) progress.style.width = "100%";
-    if (percent) percent.textContent = "100%";
-    loader.classList.add("loader-done");
-    setTimeout(() => loader.remove(), 450);
-  }
-
-  await Promise.all(firstScreenAssets.map(src =>
+  await Promise.all(allAssets.map(src =>
     preloadImage(src).then(() => {
       finished++;
       update();
     })
   ));
-  finishLoader();
+
+  if (progress) progress.style.width = "100%";
+  if (percent) percent.textContent = "100%";
+  if (message) message.textContent = "All ready! Let’s go! 🐷";
+  loader.classList.add("loader-done");
+  setTimeout(() => loader.remove(), 450);
 }
 
 /* ---------- page navigation ---------- */
