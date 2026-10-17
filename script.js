@@ -20,15 +20,15 @@ const CONFIG = {
 
 const REACTION_GIFS = {
   wrongBirthday: [
-    "scarepig.gif"
+    "scarepig.webp"
   ],
 
   no: [
-    "NoReady/furious_pig.gif"
+    "furious_pig.webp"
   ],
 
   sorry: [
-    "Sorry/weeping_pig.gif"
+    "weeping_pig.webp"
   ]
 };
 
@@ -37,41 +37,6 @@ const REACTION_GIFS = {
 
 // Only the first screen is prepared before the loader disappears.
 // Later-screen images are fetched in the background when that screen is opened.
-const SCREEN_ASSETS = {
-  readyScreen: [
-    "assets/gifs/AreYouReady/Girl_dancing_2.gif",
-    "assets/gifs/AreYouReady/amazing.gif",
-    "assets/gifs/AreYouReady/cool_girl.gif",
-    "assets/gifs/AreYouReady/excited.gif",
-    "assets/gifs/AreYouReady/happy-girl.gif",
-    "assets/gifs/AreYouReady/suprize-girl.gif",
-    "assets/gifs/AreYouReady/thinking.gif"
-  ],
-  celebrateScreen: [
-    "assets/gifs/HappyBirthday/Girl_dancing_3.gif",
-    "assets/gifs/HappyBirthday/cutepig.gif",
-    "assets/gifs/HappyBirthday/Girl_dancing_1.gif",
-    "assets/gifs/HappyBirthday/kingpig.gif",
-    "assets/gifs/dancingpig.gif",
-    "assets/gifs/cakepig.gif",
-    "assets/gifs/Crawlingdancepig.gif"
-  ],
-  puzzleScreen: [
-    "assets/gifs/Puzzle/smart_girl.gif",
-    "assets/gifs/Puzzle/suprize-girl.gif",
-    "assets/gifs/Puzzle/thinking.gif",
-    "assets/gifs/Puzzle/cool_girl.gif",
-    "assets/gifs/Puzzle/playing_girl.gif",
-    "assets/gifs/Puzzle/Thinkin_girl.gif",
-    "assets/photos/puzzle-photo.png"
-  ],
-  surpriseScreen: [],
-  videoScreen: [
-    "assets/gifs/byee/excited.gif",
-    "assets/gifs/byee/laughpig.gif"
-  ]
-};
-
 const preloadedAssets = new Map();
 
 function preloadImage(src) {
@@ -98,12 +63,6 @@ function preloadImage(src) {
   return promise;
 }
 
-function preloadScreenAssets(screenId) {
-  const assets = SCREEN_ASSETS[screenId] || [];
-  // Preload only the destination page; never download all later pages at startup.
-  assets.forEach(src => { preloadImage(src); });
-}
-
 function activateImagesIn(container) {
   if (!container) return;
   container.querySelectorAll("img[data-src]").forEach(img => {
@@ -126,13 +85,7 @@ async function prepareFirstScreen() {
   if (!loader) return;
 
   const firstScreenAssets = [
-    "assets/gifs/sittingpig.gif",
-    "assets/gifs/DateofBirth/what.gif",
-    "assets/gifs/DateofBirth/excited.gif",
-    "assets/gifs/DateofBirth/happy-girl.gif",
-    "assets/gifs/DateofBirth/suprize-girl.gif",
-    "assets/gifs/DateofBirth/heart_img.gif",
-    "assets/gifs/DateofBirth/hii.gif"
+    "assets/gifs/sittingpig.webp"
   ];
 
   let finished = 0;
@@ -156,7 +109,11 @@ async function prepareFirstScreen() {
     if (progress) progress.style.width = "100%";
     if (percent) percent.textContent = "100%";
     loader.classList.add("loader-done");
-    setTimeout(() => loader.remove(), 450);
+    setTimeout(() => {
+      loader.remove();
+      // Load floating reactions after the first screen is already usable.
+      activateImagesIn(document.getElementById("birthdayScreen"));
+    }, 300);
   }
 
   // Keep the loader bounded; later pages are intentionally loaded on demand.
@@ -190,7 +147,6 @@ function show(id) {
   // Attach image URLs only when the destination page is actually requested.
   activateScreenImages(id);
   screens.forEach(s => s.classList.toggle("active", s.id === id));
-  preloadScreenAssets(id);
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -345,17 +301,17 @@ function shuffleDecorativeGifs(container, files){
 
 const NO_DECOR_GIFS = [
 
-  "NoReady/angry.gif",
+  "angry.webp",
 
-  "NoReady/Crying_girl.gif",
+  "Crying_girl.webp",
 
-  "NoReady/ohh.gif",
+  "ohh.webp",
 
-  "NoReady/OMG.gif",
+  "OMG.webp",
 
-  "NoReady/what.gif",
+  "what.webp",
 
-  "NoReady/cryyy.gif"
+  "cryyy.webp"
 
 ];
 
@@ -364,15 +320,15 @@ const NO_DECOR_GIFS = [
 
 const SORRY_DECOR_GIFS = [
 
-  "Sorry/crying.gif",
+  "crying.webp",
 
-  "Sorry/crying-saree.gif",
+  "crying-saree.webp",
 
-  "Sorry/Crying_girl.gif",
+  "Crying_girl.webp",
 
-  "Sorry/what.gif",
+  "what.webp",
 
-  "Sorry/cryyy.gif"
+  "cryyy.webp"
 
 ];
 
@@ -432,7 +388,7 @@ function openReaction({
     WRONG DOB WORLD
   */
 
-  if(gif === "scarepig.gif"){
+  if(gif === "scarepig.webp"){
 
     wrongDobGifs.classList.remove(
       "hidden"
@@ -455,7 +411,7 @@ function openReaction({
   */
 
   else if(
-    gif === "NoReady/furious_pig.gif"
+    gif === "furious_pig.webp"
   ){
 
     wrongDobGifs.classList.add(
@@ -489,7 +445,7 @@ function openReaction({
   */
 
   else if(
-    gif === "Sorry/weeping_pig.gif"
+    gif === "weeping_pig.webp"
   ){
 
     wrongDobGifs.classList.add(
