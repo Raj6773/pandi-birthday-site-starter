@@ -84,8 +84,16 @@ async function prepareFirstScreen() {
   const message = document.getElementById("loaderMessage");
   if (!loader) return;
 
+  // Prepare the first screen's real decorative images before revealing it.
+  // Keep this list limited to the first screen so the loader stays quick.
   const firstScreenAssets = [
-    "assets/gifs/sittingpig.webp"
+    "assets/gifs/sittingpig.webp",
+    "assets/gifs/what.webp",
+    "assets/gifs/excited.webp",
+    "assets/gifs/happy-girl.webp",
+    "assets/gifs/suprize-girl.webp",
+    "assets/gifs/heart_img.webp",
+    "assets/gifs/hii.webp"
   ];
 
   let finished = 0;
@@ -95,9 +103,9 @@ async function prepareFirstScreen() {
     if (progress) progress.style.width = value + "%";
     if (percent) percent.textContent = value + "%";
     if (message) {
-      message.textContent = value < 40
+      message.textContent = value < 35
         ? "Waking up the little pigs..."
-        : value < 85
+        : value < 80
           ? "Getting the pink world ready..."
           : "Almost ready, Pandi! 🩷";
     }

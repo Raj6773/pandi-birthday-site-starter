@@ -2179,3 +2179,61 @@ video{display:block;width:100%;max-height:70svh;background:#111}
     bottom: auto !important;
   }
 }
+
+
+/* =========================================================
+   TARGETED DESKTOP FIXES — KEEP EXISTING VISIBILITY/LAYERS
+   Only explicitly keep the existing floating animations running
+   on desktop; do not alter their positions or stacking order.
+   ========================================================= */
+@media (min-width: 701px) and (hover: hover) and (pointer: fine) {
+  #birthdayScreen .dob-gif-decor img,
+  #readyScreen .ready-gif,
+  #puzzleScreen .puzzle-gif-decor .puzzle-gif {
+    animation-play-state: running !important;
+  }
+}
+
+/* Desktop-safe viewport fallback for the existing celebration overlay.
+   Keep the same balloons/confetti, timing, and JavaScript trigger. */
+.celebration-fx {
+  height: 100vh;
+  height: 100dvh;
+  z-index: 2147483000;
+  isolation: isolate;
+}
+
+.celebration-fx.show {
+  display: block !important;
+  visibility: visible;
+}
+
+.celebration-fx .fx-balloon,
+.celebration-fx .fx-confetti {
+  animation-play-state: running !important;
+}
+
+@keyframes balloonRise {
+  0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
+}
+@supports (height: 100svh) {
+  @keyframes balloonRise {
+    0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-120svh) rotate(10deg); opacity: 0; }
+  }
+}
+@keyframes confettiBurst {
+  0% { transform: translateY(-30px) scale(.4) rotate(0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(75vh) scale(1) rotate(540deg); opacity: 0; }
+}
+@supports (height: 100svh) {
+  @keyframes confettiBurst {
+    0% { transform: translateY(-30px) scale(.4) rotate(0); opacity: 0; }
+    15% { opacity: 1; }
+    100% { transform: translateY(75svh) scale(1) rotate(540deg); opacity: 0; }
+  }
+}
