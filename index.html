@@ -4,26 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ffd6e7">
-  <title>Happy Birthday Pandi 🐷🩷</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Happy Birthday Pandi 🐷🎂</title>
+  <!-- Same Pandi pig logo everywhere: browser tab, iPhone/Android home screen, shortcuts -->
+  <link rel="icon" type="image/png" href="assets/photos/puzzle-photo-removebg-preview.png">
+  <link rel="shortcut icon" href="assets/photos/puzzle-photo-removebg-preview.png">
+  <link rel="apple-touch-icon" href="assets/photos/puzzle-photo-removebg-preview.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-title" content="Happy Birthday Pandi 🐷">
+  <meta name="application-name" content="Happy Birthday Pandi 🐷">
+
+  <link rel="stylesheet" href="style.css?v=20261017-perf2">
 </head>
 <body>
+  <!-- Initial loading screen: uses the real pig GIF, not a CSS-drawn character. -->
+  <div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-label="Loading birthday surprise">
+    <div class="loader-card">
+      <img class="loader-pig" src="assets/gifs/sittingpig.webp" alt="">
+      <h2>Getting Pandi's surprise ready 🐷</h2>
+      <p id="loaderMessage">Waking up the little pigs...</p>
+      <div class="loader-track" aria-hidden="true"><span id="loaderProgress"></span></div>
+      <span id="loaderPercent" class="loader-percent">0%</span>
+    </div>
+  </div>
+
   <main id="app">
     <!-- 1. Birthday check -->
     <section class="screen active" id="birthdayScreen">
 
       <!-- Date-of-birth page floating GIFs -->
       <div class="dob-gif-decor" aria-hidden="true">
-        <img src="assets/gifs/DateofBirth/what.gif" alt="">
-        <img src="assets/gifs/DateofBirth/excited.gif" alt="">
-        <img src="assets/gifs/DateofBirth/happy-girl.gif" alt="">
-        <img src="assets/gifs/DateofBirth/suprize-girl.gif" alt="">
-        <img src="assets/gifs/DateofBirth/heart_img.gif" alt="">
-        <img src="assets/gifs/DateofBirth/hii.gif" alt="">
+        <img data-src="assets/gifs/what.webp" alt="">
+        <img data-src="assets/gifs/excited.webp" alt="">
+        <img data-src="assets/gifs/happy-girl.webp" alt="">
+        <img data-src="assets/gifs/suprize-girl.webp" alt="">
+        <img data-src="assets/gifs/heart_img.webp" alt="">
+        <img data-src="assets/gifs/hii.webp" alt="">
       </div>
 
       <div class="start-pig">
-        <img src="assets/gifs/sittingpig.gif" alt="Cute sitting pig">
+        <img src="assets/gifs/sittingpig.webp" alt="Cute sitting pig">
       </div>
       <h1>Hi!! Pandi 🐽</h1>
       <p class="subtitle">Say your birthday to start 🎂</p>
@@ -46,19 +65,32 @@
 
     <!-- 2. Are you ready -->
     <section class="screen" id="readyScreen">
-      <div class="corner-sticker placeholder-sticker">YOUR<br>STICKER</div>
-      <div class="pig-mini floaty">🐷</div>
-      <h2>Are You Ready? 👀</h2>
-      <p class="subtitle">Something tiny and silly is waiting... 🐽</p>
-      <div class="choice-row">
-        <button class="primary" id="yesBtn">YES 😎</button>
-        <button class="secondary" id="noBtn">NO 😑</button>
+
+      <!-- Large dancing GIF stays behind the main content -->
+      <div class="ready-gif-center" aria-hidden="true">
+        <img data-src="assets/gifs/Girl_dancing_2.webp" alt="" draggable="false">
       </div>
 
-      <div class="scene-decor">
-        <span class="bubble b1">🐷</span><span class="bubble b2">💤</span>
-        <span class="bubble b3">🎈</span><span class="bubble b4">✨</span>
+      <!-- Small floating corner GIFs -->
+      <div class="ready-corner-gifs" aria-hidden="true">
+        <img class="ready-gif rg1" data-src="assets/gifs/amazing.webp" alt="" draggable="false">
+        <img class="ready-gif rg2" data-src="assets/gifs/cool_girl.webp" alt="" draggable="false">
+        <img class="ready-gif rg3" data-src="assets/gifs/excited.webp" alt="" draggable="false">
+        <img class="ready-gif rg4" data-src="assets/gifs/happy-girl.webp" alt="" draggable="false">
+        <img class="ready-gif rg5" data-src="assets/gifs/suprize-girl.webp" alt="" draggable="false">
+        <img class="ready-gif rg6" data-src="assets/gifs/thinking.webp" alt="" draggable="false">
       </div>
+
+      <!-- Main content remains fully readable and clickable -->
+      <div class="ready-content">
+        <h2>Are You Ready? 👀</h2>
+        <p class="subtitle">Something tiny and silly is waiting... 🐽</p>
+        <div class="choice-row">
+          <button class="primary" id="yesBtn">YES 😎</button>
+          <button class="secondary" id="noBtn">NO 😑</button>
+        </div>
+      </div>
+
     </section>
 
     <!-- 3. Birthday celebration -->
@@ -68,11 +100,20 @@
 
       <div class="party-stage">
         <div class="balloons">🎈 🎈 🎈</div>
+
+        <div class="happy-top-gifs" aria-hidden="true">
+          <img data-src="assets/gifs/Girl_dancing_3.webp" alt="" draggable="false">
+          <img data-src="assets/gifs/cutepig.webp" alt="" draggable="false">
+          <img data-src="assets/gifs/Girl_dancing_1.webp" alt="" draggable="false">
+        </div>
+
         <div class="cake-pig">
-          <div class="party-hat">🎉</div>
-          <div class="pig-face cake-face"><span class="eye left"></span><span class="eye right"></span>
-            <span class="snout"><i></i><i></i></span>
-          </div>
+          <img
+            class="king-pig"
+            data-src="assets/gifs/kingpig.webp"
+            alt="King pig"
+            draggable="false"
+          >
           <div class="cake">
             <div class="candle c1"><span class="flame">🔥</span></div>
             <div class="candle c2"><span class="flame">🔥</span></div>
@@ -80,10 +121,11 @@
             <div class="cake-top">🎂</div>
           </div>
         </div>
+
         <div class="party-pigs">
-          <img src="assets/gifs/dancingpig.gif" alt="Dancing pig">
-          <img src="assets/gifs/cakepig.gif" alt="Birthday pig">
-          <img src="assets/gifs/Crawlingdancepig.gif" alt="Dancing pig">
+          <img data-src="assets/gifs/dancingpig.webp" alt="Dancing pig" draggable="false">
+          <img data-src="assets/gifs/cakepig.webp" alt="Birthday pig" draggable="false">
+          <img data-src="assets/gifs/Crawlingdancepig.webp" alt="Dancing pig" draggable="false">
         </div>
       </div>
 
@@ -99,6 +141,16 @@
 
     <!-- 4. Puzzle -->
     <section class="screen" id="puzzleScreen">
+
+      <!-- Puzzle page decorative GIFs -->
+      <div class="puzzle-gif-decor" aria-hidden="true">
+        <img class="puzzle-gif pg1" data-src="assets/gifs/smart_girl.webp" alt="" draggable="false">
+        <img class="puzzle-gif pg2" data-src="assets/gifs/suprize-girl.webp" alt="" draggable="false">
+        <img class="puzzle-gif pg3" data-src="assets/gifs/thinking.webp" alt="" draggable="false">
+        <img class="puzzle-gif pg4" data-src="assets/gifs/cool_girl.webp" alt="" draggable="false">
+        <img class="puzzle-gif pg5" data-src="assets/gifs/playing_girl.webp" alt="" draggable="false">
+        <img class="puzzle-gif pg6" data-src="assets/gifs/Thinkin_girl.webp" alt="" draggable="false">
+      </div>
 
   <h2>Are you ready for the gift? 🎁</h2>
 
@@ -126,7 +178,7 @@
     <div class="confetti">🎉 ✨ 🥳 ✨ 🎉</div>
     <h3>Puzzle Solved! 🐷🩷</h3>
     <p>You actually did it 😂</p>
-    <button class="primary surprise-cta" id="surpriseBtn">TAP FOR SURPRISE 🐷❤️</button>
+    <button class="primary surprise-cta" id="surpriseBtn">TAP FOR SURPRISE 🐷</button>
   </div>
 
 </section>
@@ -144,7 +196,7 @@
                  muted
                  playsinline
                  webkit-playsinline
-                 preload="auto">
+                 preload="none">
             <source src="assets/video/surprise-animation-portrait.mp4" type="video/mp4">
             Your browser does not support video playback.
           </video>
@@ -177,13 +229,65 @@
       <div class="message-card">
         <p>May all your wishes come true and have a bright future ahead ra 🐽</p>
         <div class="goodbye">Bye.... 👋</div>
-        <div class="placeholder-sticker">YOUR GOODBYE STICKER</div>
+        <div class="goodbye-gifs" aria-label="Goodbye GIFs">
+          <img data-src="assets/gifs/excited.webp" alt="">
+          <img data-src="assets/gifs/laughpig.webp" alt="">
+        </div>
       </div>
     </section>
   </main>
 
   <!-- Reusable reaction popup: different GIF + message for each action -->
   <div id="reactionOverlay" class="reaction-overlay hidden" aria-hidden="true">
+
+    <!-- Wrong-DOB / reaction corner GIFs.
+         These stay around the edges and NEVER replace the center reaction GIF. -->
+    <div id="wrongDobGifs" class="wrong-dob-gif-decor hidden" aria-hidden="true">
+  <img class="wrong-gif wg1" data-src="assets/gifs/angry.webp" alt="" draggable="false">
+  <img class="wrong-gif wg2" data-src="assets/gifs/Angry_girl.webp" alt="" draggable="false">
+  <img class="wrong-gif wg3" data-src="assets/gifs/ohh.webp" alt="" draggable="false">
+  <img class="wrong-gif wg4" data-src="assets/gifs/OMG.webp" alt="" draggable="false">
+  <img class="wrong-gif wg5" data-src="assets/gifs/cryyy.webp" alt="" draggable="false">
+</div>
+
+<!-- No Ready reaction GIFs -->
+<div id="noReadyGifs" class="no-ready-gif-decor hidden" aria-hidden="true">
+
+  <img class="no-ready-gif nr1"
+       data-src="assets/gifs/angry.webp"
+       alt="" draggable="false">
+
+  <img class="no-ready-gif nr2"
+       data-src="assets/gifs/Crying_girl.webp"
+       alt="" draggable="false">
+
+  <img class="no-ready-gif nr3"
+       data-src="assets/gifs/ohh.webp"
+       alt="" draggable="false">
+
+  <img class="no-ready-gif nr4"
+       data-src="assets/gifs/OMG.webp"
+       alt="" draggable="false">
+
+  <img class="no-ready-gif nr5"
+       data-src="assets/gifs/what.webp"
+       alt="" draggable="false">
+
+  <img class="no-ready-gif nr6"
+       data-src="assets/gifs/cryyy.webp"
+       alt="" draggable="false">
+
+</div>
+
+  <!-- Sorry reaction GIFs: completely separate from the NO GIFs -->
+  <div id="sorryGifs" class="sorry-gif-decor hidden" aria-hidden="true">
+    <img class="sorry-gif sr1" data-src="assets/gifs/crying.webp" alt="" draggable="false">
+    <img class="sorry-gif sr2" data-src="assets/gifs/crying-saree.webp" alt="" draggable="false">
+    <img class="sorry-gif sr3" data-src="assets/gifs/Crying_girl.webp" alt="" draggable="false">
+    <img class="sorry-gif sr4" data-src="assets/gifs/what.webp" alt="" draggable="false">
+    <img class="sorry-gif sr5" data-src="assets/gifs/cryyy.webp" alt="" draggable="false">
+  </div>
+
     <div class="reaction-modal">
       <button class="reaction-close" id="reactionClose" aria-label="Close">×</button>
       <img id="reactionGif" class="reaction-gif" src="" alt="Pig reaction">
@@ -197,6 +301,6 @@
   <div id="celebrationFx" class="celebration-fx" aria-hidden="true"></div>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="script.js"></script>
+  <script src="script.js?v=20261017-perf2"></script>
 </body>
 </html>
